@@ -1,0 +1,53 @@
+﻿@model IEnumerable<WebPhim.Models.LichChieu>
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-uppercase fw-bold text-primary">Quản Lý Lịch Chiếu</h2>
+        <a asp-action="Create" class="btn btn-primary rounded-pill px-4 shadow-sm">
+            <i class="fas fa-calendar-plus me-2"></i>Thêm Suất Chiếu
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">Phim</th>
+                        <th>Rạp - Phòng</th>
+                        <th>Thời Gian</th>
+                        <th>Giá Vé</th>
+                        <th class="text-center">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <span class="fw-bold text-dark">@item.Phim?.TenPhim</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-info text-dark">@item.Phong?.Rap?.TenRap</span>
+                                <span class="ms-1">@item.Phong?.TenPhong</span>
+                            </td>
+                            <td class="text-primary fw-bold">
+                                @item.ThoiGianChieu.ToString("dd/MM/yyyy HH:mm")
+                            </td>
+                            <td class="text-danger fw-bold">
+                                @item.GiaVe.ToString("N0") VNĐ
+                            </td>
+                            <td class="text-center">
+                                <a asp-action="Delete" asp-route-id="@item.Id"
+                                   onclick="return confirm('Xóa lịch chiếu này sẽ ảnh hưởng đến các vé đã đặt, Hiếu chắc chứ?')"
+                                   class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

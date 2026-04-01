@@ -33,6 +33,19 @@ namespace WebPhim.Data // ĐÃ FIX: Đổi từ .Models thành .Data để khớ
                 .WithMany()
                 .HasForeignKey(v => v.GheId)
                 .OnDelete(DeleteBehavior.Restrict);
+            // Cấu hình Lịch Chiếu: Tắt xóa dây chuyền từ Phòng
+            builder.Entity<LichChieu>()
+                .HasOne(lc => lc.Phong)
+                .WithMany(p => p.LichChieus)
+                .HasForeignKey(lc => lc.PhongId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Cấu hình Phòng: Tắt xóa dây chuyền từ Rạp (Tùy chọn, nếu Hiếu muốn an toàn tuyệt đối)
+            builder.Entity<Phong>()
+                .HasOne(p => p.Rap)
+                .WithMany(r => r.Phongs)
+                .HasForeignKey(p => p.RapId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

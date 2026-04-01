@@ -1,0 +1,48 @@
+﻿/* Container chứa các hàng ghế */
+.seat-container {
+    width: 650px;
+    gap: 8px;
+    margin: 0 auto;
+}
+
+/* Hiệu ứng cho từng ô ghế */
+.seat-item {
+    width: 55px;
+    height: 45px;
+    transition: all 0.2s ease-in-out;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 0.75rem;
+}
+
+    /* Hiệu ứng phóng to khi rê chuột vào */
+    .seat-item:hover {
+        transform: scale(1.15);
+        z-index: 10;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+/* Màn hình giả lập */
+.cinema-screen {
+    width: 80%;
+    margin: 0 auto 40px auto;
+    background: #6c757d;
+    color: white;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 0 0 50px 50px;
+    font-size: 0.8rem;
+    box-shadow: 0 10px 20px -5px rgba(0,0,0,0.3);
+}
+
+/* Chú thích màu sắc (Legend) */
+.seat-legend .badge {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+}

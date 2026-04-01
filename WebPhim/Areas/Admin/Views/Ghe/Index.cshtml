@@ -1,0 +1,79 @@
+﻿@model IEnumerable<WebPhim.Models.Ghe>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Ghe.css" asp-append-version="true" />
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Phong" asp-action="Index">Quản lý Phòng</a></li>
+            <li class="breadcrumb-item active">Sơ đồ ghế</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0">Sơ đồ ghế</h2>
+            <p class="text-muted">Phòng: <span class="text-primary fw-bold">@ViewBag.TenPhong</span></p>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <form asp-action="AutoGenerateSeats" method="post">
+                <input type="hidden" name="phongId" value="@ViewBag.PhongId" />
+                <button type="submit" class="btn btn-warning rounded-pill px-4 shadow">
+                    <i class="fas fa-magic me-2"></i>Tự động tạo 50 ghế
+                </button>
+            </form>
+        }
+    </div>
+
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white">
+        <div class="cinema-screen">MÀN HÌNH</div>
+
+        <div class="card-body p-4 d-flex justify-content-center">
+            <div class="d-flex flex-wrap seat-container">
+                @foreach (var item in Model)
+                {
+                    <div class="seat-item border @(item.LoaiGhe == "VIP" ? "bg-danger text-white border-danger" : "bg-light text-dark")"
+                         title="Loại ghế: @item.LoaiGhe">
+                        <span class="fw-bold">@item.SoGhe</span>
+                    </div>
+
+                    @* Logic ngắt dòng: Cứ sau 10 ghế (vị trí 9, 19, 29...) thì chèn div full width *@
+                    if (Model.ToList().IndexOf(item) % 10 == 9)
+                    {
+                        <div class="w-100 mb-2"></div>
+                    }
+                }
+            </div>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="p-5 text-center">
+                <div class="alert alert-info d-inline-block px-5">
+                    <i class="fas fa-info-circle me-2"></i>Chưa có dữ liệu ghế cho phòng này.
+                </div>
+            </div>
+        }
+
+        <div class="card-footer bg-light border-0 py-3 text-center seat-legend">
+            <div class="d-inline-block me-4">
+                <span class="badge bg-light border border-secondary">&nbsp;</span>
+                <small class="fw-bold">Ghế thường</small>
+            </div>
+            <div class="d-inline-block">
+                <span class="badge bg-danger border border-danger">&nbsp;</span>
+                <small class="fw-bold">Ghế VIP (Hàng E)</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a asp-area="Admin" asp-controller="Phong" asp-action="Index" class="btn btn-outline-secondary rounded-pill">
+            <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách phòng
+        </a>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+﻿@model WebPhim.Models.Phong
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-success text-white py-3 rounded-top-4">
+                    <h4 class="mb-0 fw-bold text-center">THÊM PHÒNG CHIẾU</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tên Phòng</label>
+                            <input asp-for="TenPhong" class="form-control" placeholder="Ví dụ: Phòng 01 - IMAX" />
+                            <span asp-validation-for="TenPhong" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Chọn Rạp Chiếu</label>
+                            <select asp-for="RapId" class="form-select" asp-items="ViewBag.RapId">
+                                <option value="">-- Chọn hệ thống rạp --</option>
+                            </select>
+                            <span asp-validation-for="RapId" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg rounded-pill fw-bold">TẠO PHÒNG</button>
+                            <a asp-action="Index" class="btn btn-link text-muted">Quay lại danh sách</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
