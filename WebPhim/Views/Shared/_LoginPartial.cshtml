@@ -1,0 +1,38 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using WebPhim.Models
+@inject SignInManager<NguoiDung> SignInManager
+@inject UserManager<NguoiDung> UserManager
+
+<ul class="navbar-nav ms-auto">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+        var displayAlias = user?.HoTen ?? UserManager.GetUserName(User);
+
+        <li class="nav-item">
+            <a class="nav-link btn-login-nav" asp-area="Identity" asp-page="/Account/Manage/Index">
+                <i class="fas fa-user-circle nav-auth-icon"></i>Chào, @displayAlias!
+            </a>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn-logout-nav">
+                    <i class="fas fa-sign-out-alt nav-auth-icon"></i>Thoát
+                </button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link btn-login-nav" asp-area="Identity" asp-page="/Account/Login">
+                <i class="fas fa-sign-in-alt nav-auth-icon"></i>Đăng nhập
+            </a>
+        </li>
+        <li class="nav-item ms-lg-2">
+            <a class="nav-link btn-register-nav" asp-area="Identity" asp-page="/Account/Register">
+                <i class="fas fa-user-plus nav-auth-icon"></i>Đăng ký
+            </a>
+        </li>
+    }
+</ul>

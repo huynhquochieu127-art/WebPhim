@@ -1,0 +1,121 @@
+﻿@model WebPhim.Models.Phim
+
+@{
+    ViewData["Title"] = "Thêm Phim Mới - Quản trị";
+}
+
+@* Sử dụng class admin-card-container từ Layout.css để tự động đẩy Footer xuống *@
+<div class="container py-4 admin-card-container">
+    <div class="card shadow-sm border-0 overflow-hidden">
+
+        @* Header đồng bộ với hệ thống *@
+        <div class="card-header bg-primary text-white py-3">
+            <h5 class="mb-0 fw-bold">
+                <i class="fas fa-plus-circle me-2"></i>THÊM PHIM MỚI VÀO HỆ THỐNG
+            </h5>
+        </div>
+
+        <div class="card-body p-4 p-lg-5">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none"></div>
+
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <div class="row g-4">
+
+                    @* --- CỘT TRÁI: NHẬP LIỆU --- *@
+                    <div class="col-lg-8">
+                        <div class="mb-3">
+                            <label asp-for="TenPhim" class="form-label fw-bold"><i class="fas fa-heading me-1 text-primary"></i>Tên Phim</label>
+                            <input asp-for="TenPhim" class="form-control form-control-lg border-2" placeholder="Nhập tên phim..." />
+                            <span asp-validation-for="TenPhim" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MoTa" class="form-label fw-bold"><i class="fas fa-align-left me-1 text-primary"></i>Mô Tả Nội Dung</label>
+                            <textarea asp-for="MoTa" class="form-control border-2" rows="5" placeholder="Tóm tắt ngắn gọn nội dung phim..."></textarea>
+                            <span asp-validation-for="MoTa" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="LoaiPhim" class="form-label fw-bold"><i class="fas fa-tags me-1 text-primary"></i>Thể Loại</label>
+                                <input asp-for="LoaiPhim" class="form-control border-2" placeholder="Hành động, Hài..." />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ThoiLuong" class="form-label fw-bold"><i class="fas fa-clock me-1 text-primary"></i>Thời Lượng</label>
+                                <div class="input-group">
+                                    <input asp-for="ThoiLuong" class="form-control border-2" type="number" />
+                                    <span class="input-group-text border-2 bg-light">phút</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="DaoDien" class="form-label fw-bold"><i class="fas fa-user-tie me-1 text-primary"></i>Đạo Diễn</label>
+                                <input asp-for="DaoDien" class="form-control border-2" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="KhuVuc" class="form-label fw-bold"><i class="fas fa-layer-group me-1 text-primary"></i>Khu Vực Hiển Thị</label>
+                                <select asp-for="KhuVuc" class="form-select border-2 shadow-none">
+                                    <option value="Phim Đang Chiếu">Phim Đang Chiếu</option>
+                                    <option value="Phim Sắp Chiếu">Phim Sắp Chiếu</option>
+                                    <option value="Phim Hot">Phim Hot Trending</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FileAnh" class="form-label fw-bold"><i class="fas fa-image me-1 text-primary"></i>Chọn Poster</label>
+                            <input asp-for="FileAnh" type="file" class="form-control border-2" id="imgInput" accept="image/*" />
+                            <div class="form-text">Khuyên dùng ảnh tỉ lệ 2:3 (Ví dụ: 600x900px)</div>
+                        </div>
+                    </div>
+
+                    @* --- CỘT PHẢI: PREVIEW POSTER --- *@
+                    <div class="col-lg-4">
+                        <div class="sticky-top" style="top: 20px; z-index: 1;">
+                            <label class="fw-bold d-block mb-3 text-center text-muted">XEM TRƯỚC POSTER</label>
+
+                            @* Sử dụng preview-box từ Layout.css *@
+                            <div class="preview-box shadow-sm mx-auto" style="max-width: 280px;">
+                                <img id="imgPreview"
+                                     src="https://placehold.co/400x600?text=Chưa+có+ảnh"
+                                     alt="Preview" />
+                            </div>
+
+                            <div class="alert alert-info mt-3 py-2 px-3 small shadow-sm border-0">
+                                <i class="fas fa-info-circle me-1"></i> Ảnh sẽ được tự động căn chỉnh theo tỉ lệ chuẩn rạp phim.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @* Nút điều hướng (Luôn nằm dưới cùng và không bị đè) *@
+                <div class="form-section-divider text-center text-lg-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4 py-2 rounded-pill me-2">
+                        <i class="fas fa-times me-2"></i>Quay lại
+                    </a>
+                    <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow">
+                        <i class="fas fa-check-circle me-2"></i>LƯU PHIM MỚI
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Xử lý xem trước ảnh ngay khi chọn file
+        document.getElementById('imgInput').onchange = function (evt) {
+            const [file] = this.files;
+            if (file) {
+                const preview = document.getElementById('imgPreview');
+                preview.src = URL.createObjectURL(file);
+                // Giải phóng bộ nhớ sau khi load xong
+                preview.onload = () => URL.revokeObjectURL(preview.src);
+            }
+        };
+    </script>
+}

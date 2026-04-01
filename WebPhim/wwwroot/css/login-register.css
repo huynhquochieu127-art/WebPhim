@@ -1,0 +1,110 @@
+﻿/* login-register.css */
+
+/* --- 1. CẤU HÌNH CHUNG --- */
+body {
+    background-color: #f4f7f6;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* --- 2. AUTH CARD (CHO TRANG LOGIN/REGISTER) --- */
+.auth-card {
+    border-radius: 1rem !important;
+    overflow: hidden;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.auth-header-dark {
+    background: linear-gradient(45deg, #212529, #343a40);
+    color: white !important;
+}
+
+.auth-header-primary {
+    background: linear-gradient(45deg, #0d6efd, #0b5ed7);
+    color: white !important;
+}
+
+/* --- 3. INPUT & BUTTONS (FORM CHÍNH) --- */
+.form-control {
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.btn-auth {
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .btn-auth:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15) !important;
+    }
+
+/* --- 4. DESIGN CHO THANH MENU (NAVBAR AUTH) --- */
+/* Đẩy nhóm auth sang phải */
+.navbar-nav.ms-auto {
+    align-items: center;
+}
+
+/* Style cho nút Đăng Nhập (Bên trái) */
+.btn-login-nav {
+    color: #444 !important;
+    font-weight: 500;
+    padding: 8px 16px !important;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+    .btn-login-nav:hover {
+        color: #000 !important;
+        background-color: rgba(0,0,0,0.05);
+        border-radius: 50px;
+    }
+
+/* Style cho nút Đăng Ký (Bên phải - Nổi bật) */
+.btn-register-nav {
+    background-color: #0d6efd !important;
+    color: white !important;
+    font-weight: 600;
+    padding: 8px 20px !important;
+    border-radius: 50px !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.15);
+    display: flex;
+    align-items: center;
+}
+
+    .btn-register-nav:hover {
+        background-color: #0b5ed7 !important;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 15px rgba(13, 110, 253, 0.25) !important;
+    }
+
+/* Style cho nút Đăng Xuất */
+.btn-logout-nav {
+    color: #dc3545 !important;
+    font-weight: 500;
+    background: transparent;
+    border: none;
+    padding: 8px 16px !important;
+}
+
+/* --- 5. TÙY CHỈNH ICON CHO ĐẸP --- */
+.nav-auth-icon {
+    font-size: 1.1rem;
+    margin-right: 8px;
+    opacity: 0.9;
+}
+
+/* Hiệu ứng rung nhẹ cho icon khi hover */
+.btn-register-nav:hover .nav-auth-icon,
+.btn-login-nav:hover .nav-auth-icon {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}

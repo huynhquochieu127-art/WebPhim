@@ -1,0 +1,20 @@
+﻿@model IEnumerable<WebPhim.Models.Phim>
+
+<div class="container py-5">
+    <h2 class="fw-bold mb-4 border-start border-4 border-primary ps-3">TẤT CẢ PHIM</h2>
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                    <img src="@item.HinhAnh" class="card-img-top" style="height: 350px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold text-truncate">@item.TenPhim</h5>
+                        <p class="card-text text-muted small">@item.LoaiPhim | @item.ThoiLuong phút</p>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary w-100 rounded-pill">XEM CHI TIẾT</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

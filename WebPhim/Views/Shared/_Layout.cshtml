@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebPhim</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold text-primary" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-film me-2"></i>WebPhim
+                </a>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-danger fw-bold" href="#" data-bs-toggle="dropdown">Quản trị</a>
+                                <ul class="dropdown-menu shadow border-0">
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Phim" asp-action="Index">Quản lý Phim</a></li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                    <form class="d-flex mx-auto col-lg-5" asp-area="" asp-controller="Home" asp-action="Search" method="get">
+                        <div class="input-group w-100 rounded-pill overflow-hidden border">
+                            <input class="form-control border-0 bg-light shadow-none" name="query" placeholder="Tìm phim...">
+                            <button class="btn btn-light border-0" type="submit"><i class="fas fa-search text-primary"></i></button>
+                        </div>
+                    </form>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="footer text-muted bg-light">
+        <div class="container text-center py-4">
+            <p class="mb-0">&copy; 2026 - <span class="fw-bold">WebPhim</span></p>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

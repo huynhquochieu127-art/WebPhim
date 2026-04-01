@@ -1,0 +1,62 @@
+﻿/* ============================================================
+   CSS DÀNH RIÊNG CHO TRANG CHỦ (HOME INDEX)
+   ============================================================ */
+
+
+/* 2. KHUNG POSTER PHIM (FIX TRIỆT ĐỂ LỖI VỠ HÀNG) */
+.poster-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3; /* Ép tỉ lệ poster chuẩn 2:3 */
+    overflow: hidden;
+    background-color: #f8f9fa;
+    border-radius: 12px 12px 0 0;
+}
+
+.poster-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cắt ảnh thông minh để không bị méo */
+    transition: transform 0.4s ease;
+    display: block;
+}
+
+/* Hiệu ứng khi rê chuột vào Card phim */
+.movie-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+}
+
+    .movie-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2); /* Đã sửa lỗi box-shadow */
+    }
+
+        .movie-card:hover .poster-img {
+            transform: scale(1.08);
+        }
+
+/* 3. CÁC THÀNH PHẦN TRÊN POSTER */
+.movie-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+}
+
+.movie-info-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 15px 10px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    color: white;
+    z-index: 1;
+}
+
+/* 4. FOOTER TRANG CHỦ (BẢO HIỂM) */
+.home-footer-box {
+    border-radius: 20px;
+    margin-bottom: 100px; /* Đẩy footer hệ thống xuống xa */
+}

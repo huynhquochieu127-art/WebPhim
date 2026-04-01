@@ -1,0 +1,57 @@
+﻿@model IEnumerable<WebPhim.Models.Phim>
+@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+@section Styles {
+    <style>
+        .hero-section {
+            background: linear-gradient(45deg, #1a237e, #0d47a1);
+            border-radius: 20px;
+        }
+
+        .movie-card {
+            transition: transform 0.3s;
+        }
+
+            .movie-card:hover {
+                transform: translateY(-10px);
+            }
+
+        .movie-info-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+        }
+    </style>
+}
+
+
+
+<div class="container py-5" id="danh-sach-phim">
+    <h2 class="fw-bold mb-4">PHIM ĐANG CHIẾU</h2>
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card movie-card h-100 border-0 shadow-sm">
+                    <div class="poster-wrapper">
+                        <img src="@(item.HinhAnh ?? "https://placehold.co/400x600")" class="poster-img" alt="@item.TenPhim">
+                        <div class="movie-info-overlay">
+                            <h6 class="fw-bold mb-0 text-truncate">@item.TenPhim</h6>
+                        </div>
+                    </div>
+                    <div class="card-body p-3">
+                        <a asp-controller="Phim" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary ...">
+                            XEM PHIM
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

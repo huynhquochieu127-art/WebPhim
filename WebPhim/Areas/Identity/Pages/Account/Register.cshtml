@@ -1,0 +1,100 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Đăng ký thành viên";
+}
+
+@section Styles {
+    @* Nhúng file CSS dùng chung *@
+    <link rel="stylesheet" href="~/css/login-register.css" asp-append-version="true" />
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            @* Sử dụng auth-card với bo góc và shadow xịn *@
+            <div class="card shadow-lg auth-card border-0">
+                @* Header dùng Gradient xanh nổi bật của trang Register *@
+                <div class="card-header auth-header-primary text-white text-center py-4">
+                    <h3 class="font-weight-bold my-1">
+                        <i class="fas fa-user-plus me-2"></i>Tạo Tài Khoản
+                    </h3>
+                    <p class="mb-0 small opacity-75">Gia nhập cộng đồng yêu phim ngay hôm nay!</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3 small" role="alert"></div>
+
+                        @* Dòng: Họ Tên *@
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.HoTen" class="form-control" placeholder="Nguyễn Văn A" />
+                            <label asp-for="Input.HoTen" class="text-muted">Họ và Tên</label>
+                            <span asp-validation-for="Input.HoTen" class="text-danger small"></span>
+                        </div>
+
+                        @* Dòng: Địa chỉ *@
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.DiaChi" class="form-control" placeholder="Hồ Chí Minh" />
+                            <label asp-for="Input.DiaChi" class="text-muted">Địa chỉ</label>
+                            <span asp-validation-for="Input.DiaChi" class="text-danger small"></span>
+                        </div>
+
+                        @* Dòng: Email *@
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder="name@example.com" />
+                            <label asp-for="Input.Email" class="text-muted">Địa chỉ Email</label>
+                            <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                        </div>
+
+                        @* Dòng: Mật khẩu (Chia 2 cột trên màn hình lớn) *@
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Input.Password" class="form-control" autocomplete="new-password" placeholder="Mật khẩu" />
+                                    <label asp-for="Input.Password" class="text-muted">Mật khẩu</label>
+                                    <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" placeholder="Xác nhận" />
+                                    <label asp-for="Input.ConfirmPassword" class="text-muted">Xác nhận</label>
+                                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        @* Nút Đăng ký *@
+                        <div class="mt-4">
+                            <button id="registerSubmit" type="submit" class="w-100 btn btn-primary btn-lg btn-auth btn-rounded shadow py-2">
+                                <i class="fas fa-check-circle me-2"></i>Hoàn tất Đăng ký
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                @* Footer Card: Chuyển sang Đăng nhập *@
+                <div class="card-footer text-center py-3 bg-light border-0">
+                    <div class="small">
+                        <span class="text-muted">Bạn đã là thành viên?</span>
+                        <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none fw-bold text-primary ms-1">
+                            Đăng nhập ngay
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            @* Link quay về trang chủ *@
+            <div class="text-center mt-4 mb-5">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="text-muted small text-decoration-none">
+                    <i class="fas fa-arrow-left me-1"></i> Quay về trang chủ
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,46 @@
+﻿/* Style cho trang chi tiết phim của Hiếu */
+body {
+    background-color: #f8f9f7; /* Màu nền hơi xám nhạt cho sang */
+}
+
+.movie-detail-container {
+    max-width: 1200px;
+}
+
+/* Hiệu ứng cho Poster */
+.poster-card {
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+    .poster-card:hover {
+        transform: scale(1.02);
+    }
+
+/* Nút bấm nổi bật */
+.btn-watch-now {
+    background: linear-gradient(135deg, #e50914 0%, #b20710 100%);
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+    .btn-watch-now:hover {
+        filter: brightness(1.1);
+        box-shadow: 0 8px 15px rgba(229, 9, 20, 0.4);
+        color: white;
+    }
+
+/* Nội dung mô tả */
+.movie-description {
+    white-space: pre-line; /* Giữ dấu xuống dòng từ database */
+    text-align: justify;
+    line-height: 1.8;
+    color: #4a4a4a;
+}
+
+.info-badge {
+    background-color: #ffffff;
+    border-left: 5px solid #0d6efd;
+}

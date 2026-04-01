@@ -1,0 +1,69 @@
+﻿@model IEnumerable<WebPhim.Models.Phim>
+
+@{
+    ViewData["Title"] = "Quản lý danh sách phim";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold"><i class="fas fa-list me-2"></i>Danh Sách Phim</h2>
+        <a asp-action="Create" class="btn btn-success shadow-sm rounded-pill px-4">
+            <i class="fas fa-plus-circle me-1"></i> Thêm Phim Mới
+        </a>
+    </div>
+
+    @* Thanh tìm kiếm *@
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="row g-2">
+                <div class="col-md-10">
+                    <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" class="form-control" placeholder="Tìm theo tên phim hoặc đạo diễn...">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Lọc ngay</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @* Bảng hiển thị *@
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Hình ảnh</th>
+                        <th>Tên phim</th>
+                        <th>Thể loại</th>
+                        <th>Thời lượng</th>
+                        <th>Đạo diễn</th>
+                        <th class="text-center">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@item.HinhAnh" class="rounded shadow-sm" style="width: 60px; height: 80px; object-fit: cover;"
+                                     onerror="this.src='https://placehold.co/60x80?text=No+Img'">
+                            </td>
+                            <td class="fw-bold">@item.TenPhim</td>
+                            <td><span class="badge bg-info text-dark">@item.LoaiPhim</span></td>
+                            <td>@item.ThoiLuong phút</td>
+                            <td>@item.DaoDien</td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning me-1">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
