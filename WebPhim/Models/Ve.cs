@@ -6,7 +6,7 @@
         public DateTime NgayDat { get; set; }
         public decimal TongTien { get; set; }
 
-        // Liên kết với Identity User
+        // Liên kết với Identity User a
         public string UserId { get; set; }
 
         // Liên kết với Lịch Chiếu
