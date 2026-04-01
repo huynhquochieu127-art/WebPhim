@@ -1,19 +1,47 @@
 ﻿@model IEnumerable<WebPhim.Models.Phim>
+@{
+    ViewData["Title"] = "Danh sách phim";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Home.css" asp-append-version="true" />
+}
 
 <div class="container py-5">
-    <h2 class="fw-bold mb-4 border-start border-4 border-primary ps-3">TẤT CẢ PHIM</h2>
-    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+    <div class="page-header mb-4">
+        <h2 class="fw-bold text-uppercase text-primary">Khám Phá Điện Ảnh</h2>
+        <p class="text-muted">Tổng số: @Model.Count() phim đang sẵn sàng phục vụ Hiếu</p>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
         @foreach (var item in Model)
         {
             <div class="col">
-                <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                    <img src="@item.HinhAnh" class="card-img-top" style="height: 350px; object-fit: cover;">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold text-truncate">@item.TenPhim</h5>
-                        <p class="card-text text-muted small">@item.LoaiPhim | @item.ThoiLuong phút</p>
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary w-100 rounded-pill">XEM CHI TIẾT</a>
+                <a asp-controller="Phim" asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none">
+                    <div class="card movie-card h-100 border-0 bg-transparent">
+                        @* Phần Poster giữ nguyên hiệu ứng hover *@
+                        <div class="poster-wrapper mb-3">
+                            <div class="movie-badge">
+                                <span class="badge rounded-pill bg-primary shadow-sm">@item.LoaiPhim</span>
+                            </div>
+                            <img src="@(item.HinhAnh ?? "https://placehold.co/400x600")"
+                                 class="poster-img rounded-4 shadow-sm"
+                                 alt="@item.TenPhim">
+                        </div>
+
+                        @* Phần thông tin phim nằm DƯỚI poster *@
+                        <div class="movie-content px-1">
+                            <h6 class="fw-bold text-dark mb-1 text-truncate-2" title="@item.TenPhim">
+                                @item.TenPhim
+                            </h6>
+                            <div class="d-flex align-items-center text-muted small">
+                                <span><i class="far fa-clock me-1"></i>@item.ThoiLuong phút</span>
+                                <span class="mx-2">|</span>
+                                <span>@item.KhuVuc</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         }
     </div>

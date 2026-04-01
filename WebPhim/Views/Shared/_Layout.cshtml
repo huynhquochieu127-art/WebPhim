@@ -3,26 +3,51 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebPhim</title>
+    <title>@ViewData["Title"] - CinemaVP</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     @await RenderSectionAsync("Styles", required: false)
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcfcfc;
+        }
+
+        .navbar {
+            transition: all 0.3s;
+        }
+
+        .nav-link {
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+            .nav-link:hover {
+                color: #dc3545 !important;
+            }
+
+        .footer {
+            border-top: 1px solid #eee;
+            background: #fff;
+        }
+    </style>
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold text-primary" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="fas fa-film me-2"></i>WebPhim
+<body class="d-flex flex-column min-vh-100">
+    <header class="sticky-top shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-danger fs-3" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-film me-2"></i>CinemaVP
                 </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav">
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
                         </li>
@@ -30,57 +55,52 @@
                         @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-danger fw-bold" href="#" id="adminDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Quản trị
+                                <a class="nav-link dropdown-toggle text-primary fw-bold" href="#" id="adminDropdown" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-shield me-1"></i>Hệ thống
                                 </a>
-                                <ul class="dropdown-menu shadow border-0" aria-labelledby="adminDropdown">
-                                    <li>
-                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Phim" asp-action="Index">
-                                            <i class="fas fa-video me-2"></i>Quản lý Phim
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Rap" asp-action="Index">
-                                            <i class="fas fa-building me-2"></i>Quản lý Rạp
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Phong" asp-action="Index">
-                                            <i class="fas fa-building me-2"></i>Quản lý Phòng
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-area="Admin" asp-controller="LichChieu" asp-action="Index">
-                                            <i class="fas fa-building me-2"></i>Quản lý Lich Chieu
-                                        </a>
-                                    </li>
+                                <ul class="dropdown-menu shadow-lg border-0 rounded-3 mt-2">
+                                    <li><a class="dropdown-item py-2" asp-area="Admin" asp-controller="Phim" asp-action="Index"><i class="fas fa-video me-2 text-muted"></i>Phim</a></li>
+                                    <li><a class="dropdown-item py-2" asp-area="Admin" asp-controller="Rap" asp-action="Index"><i class="fas fa-building me-2 text-muted"></i>Rạp</a></li>
+                                    <li><a class="dropdown-item py-2" asp-area="Admin" asp-controller="Phong" asp-action="Index"><i class="fas fa-door-open me-2 text-muted"></i>Phòng</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item py-2" asp-area="Admin" asp-controller="LichChieu" asp-action="Index"><i class="fas fa-calendar-alt me-2 text-muted"></i>Lịch chiếu</a></li>
                                 </ul>
                             </li>
                         }
                     </ul>
 
-                    <form class="d-flex mx-auto col-lg-5" asp-area="" asp-controller="Home" asp-action="Search" method="get">
-                        <div class="input-group w-100 rounded-pill overflow-hidden border">
-                            <input class="form-control border-0 bg-light shadow-none" name="query" placeholder="Tìm phim...">
-                            <button class="btn btn-light border-0" type="submit">
-                                <i class="fas fa-search text-primary"></i>
+                    <form class="d-flex mx-lg-4 my-2 my-lg-0 flex-grow-1" style="max-width: 400px;" asp-area="" asp-controller="Home" asp-action="Search" method="get">
+                        <div class="input-group">
+                            <input class="form-control border-end-0 rounded-start-pill bg-light ps-4 shadow-none" name="query" placeholder="Tìm phim, thể loại...">
+                            <button class="btn btn-light border-start-0 rounded-end-pill px-3 shadow-none" type="submit">
+                                <i class="fas fa-search text-danger"></i>
                             </button>
                         </div>
                     </form>
 
-                    <partial name="_LoginPartial" />
+                    <div class="ms-lg-3">
+                        <partial name="_LoginPartial" />
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
 
-    <main role="main">
+    <main role="main" class="flex-shrink-0">
         @RenderBody()
     </main>
 
-    <footer class="footer text-muted bg-light mt-auto">
-        <div class="container text-center py-4">
-            <p class="mb-0">&copy; 2026 - <span class="fw-bold">WebPhim</span></p>
+    <footer class="footer mt-auto py-5">
+        <div class="container text-center">
+            <div class="mb-3">
+                <a class="text-decoration-none text-danger fw-bold fs-4" href="#">CinemaVP</a>
+            </div>
+            <div class="social-links mb-4">
+                <a href="#" class="text-muted mx-3 fs-5"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="text-muted mx-3 fs-5"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-muted mx-3 fs-5"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p class="text-muted small mb-0">&copy; 2026 - <span class="fw-bold">CinemaVP Entertainment</span>. All rights reserved.</p>
         </div>
     </footer>
 

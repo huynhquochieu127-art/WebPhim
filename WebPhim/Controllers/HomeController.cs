@@ -14,15 +14,37 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        // Lấy danh sách phim và lọc theo KhuVuc
-        // Thêm .AsNoTracking() để tăng tốc độ tải trang chủ vì chúng ta chỉ đọc dữ liệu
+        // Lấy danh sách phim đang chiếu
         var danhSachPhim = await _context.Phims
             .Where(p => p.KhuVuc == "Phim Đang Chiếu")
             .AsNoTracking()
             .ToListAsync();
 
-        // Nếu danh sách trống, view sẽ nhận một List rỗng thay vì null, giúp tránh lỗi giao diện
         return View(danhSachPhim ?? new List<Phim>());
     }
-   
+
+    // ============================================================
+    // ACTION CHI TIẾT PHIM - FIX LỖI 404
+    // ============================================================
+    public async Task<IActionResult> Details(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        // Tìm phim theo Id, kèm theo danh sách Lịch Chiếu của phim đó
+        var phim = await _context.Phims
+            .Include(p => p.LichChieus) // Load lịch chiếu
+            .ThenInclude(lc => lc.Phong) // Load thông tin phòng của lịch chiếu đó
+            .ThenInclude(ph => ph.Rap)   // Load thông tin rạp của phòng đó
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (phim == null)
+        {
+            return NotFound();
+        }
+
+        return View(phim);
+    }
 }

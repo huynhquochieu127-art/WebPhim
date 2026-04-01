@@ -1,56 +1,44 @@
 ﻿@model IEnumerable<WebPhim.Models.Phim>
 @{
-    ViewData["Title"] = "Trang chủ";
+    ViewData["Title"] = "Trang chủ - CinemaVP";
 }
 
 @section Styles {
-    <style>
-        .hero-section {
-            background: linear-gradient(45deg, #1a237e, #0d47a1);
-            border-radius: 20px;
-        }
-
-        .movie-card {
-            transition: transform 0.3s;
-        }
-
-            .movie-card:hover {
-                transform: translateY(-10px);
-            }
-
-        .movie-info-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 15px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/Home.css" asp-append-version="true" />
 }
 
-
-
 <div class="container py-5" id="danh-sach-phim">
-    <h2 class="fw-bold mb-4">PHIM ĐANG CHIẾU</h2>
-    <div class="row g-4">
+    <h2 class="fw-bold mb-5 text-uppercase">Phim Đang Chiếu</h2>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
         @foreach (var item in Model)
         {
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="card movie-card h-100 border-0 shadow-sm">
-                    <div class="poster-wrapper">
-                        <img src="@(item.HinhAnh ?? "https://placehold.co/400x600")" class="poster-img" alt="@item.TenPhim">
-                        <div class="movie-info-overlay">
-                            <h6 class="fw-bold mb-0 text-truncate">@item.TenPhim</h6>
+            <div class="col">
+                <a asp-controller="Phim" asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none">
+                    <div class="card movie-card h-100 border-0 bg-transparent">
+
+                        @* Phần Poster *@
+                        <div class="poster-wrapper">
+                            <div class="movie-badge">
+                                <span class="badge rounded-pill shadow-sm">@item.LoaiPhim</span>
+                            </div>
+                            <img src="@(item.HinhAnh ?? "https://placehold.co/400x600")"
+                                 class="poster-img"
+                                 alt="@item.TenPhim">
+                        </div>
+
+                        @* Phần thông tin phim *@
+                        <div class="movie-content px-1">
+                            <div class="movie-title fw-bold" title="@item.TenPhim">
+                                @item.TenPhim
+                            </div>
+                            <div class="movie-meta d-flex align-items-center mt-1">
+                                <span class="text-danger me-2"><i class="bi bi-clock-fill me-1"></i>@item.ThoiLuong'</span>
+                                <span class="text-muted">| @item.KhuVuc</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body p-3">
-                        <a asp-controller="Phim" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary ...">
-                            XEM PHIM
-                        </a>
-                    </div>
-                </div>
+                </a>
             </div>
         }
     </div>

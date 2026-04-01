@@ -1,48 +1,89 @@
-﻿/* Container chứa các hàng ghế */
-.seat-container {
-    width: 650px;
-    gap: 8px;
-    margin: 0 auto;
-}
+﻿/* ============================================================
+   STYLE CHỌN GHẾ - ĐÃ FIX CHIA HÀNG (ROW-BASED)
+   ============================================================ */
 
-/* Hiệu ứng cho từng ô ghế */
-.seat-item {
-    width: 55px;
-    height: 45px;
-    transition: all 0.2s ease-in-out;
-    cursor: default;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    font-size: 0.75rem;
-}
-
-    /* Hiệu ứng phóng to khi rê chuột vào */
-    .seat-item:hover {
-        transform: scale(1.15);
-        z-index: 10;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-
-/* Màn hình giả lập */
 .cinema-screen {
     width: 80%;
-    margin: 0 auto 40px auto;
+    margin: 0 auto 50px auto;
     background: #6c757d;
     color: white;
     text-align: center;
-    padding: 5px 0;
-    border-radius: 0 0 50px 50px;
-    font-size: 0.8rem;
-    box-shadow: 0 10px 20px -5px rgba(0,0,0,0.3);
+    padding: 10px 0;
+    border-radius: 0 0 100px 100px;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 8px;
+    box-shadow: 0 15px 25px -5px rgba(0,0,0,0.1);
 }
 
-/* Chú thích màu sắc (Legend) */
-.seat-legend .badge {
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 5px;
+/* Khung bao quát: Xếp các hàng ghế từ trên xuống dưới */
+.seat-container {
+    width: 100%;
+    max-width: 850px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column; /* Xếp hàng A, rồi đến hàng B... */
+    gap: 15px; /* Khoảng cách giữa các hàng */
 }
+
+/* Style cho từng hàng ghế cụ thể */
+.seat-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Khoảng cách giữa các ghế trong cùng 1 hàng */
+}
+
+/* Nhãn chữ cái ở đầu và cuối hàng (A, B, C...) */
+.row-label {
+    width: 30px;
+    font-weight: bold;
+    color: #adb5bd;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* Ô ghế */
+.seat-item {
+    width: 45px;
+    height: 40px;
+    background-color: #ffffff;
+    border: 2px solid #dee2e6;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #495057;
+    flex-shrink: 0; /* Không cho ghế bị bóp méo */
+}
+
+    .seat-item:hover:not(.occupied) {
+        transform: translateY(-3px) scale(1.1);
+        border-color: #0d6efd;
+        color: #0d6efd;
+        box-shadow: 0 5px 10px rgba(13, 110, 253, 0.15);
+    }
+
+    /* TRẠNG THÁI */
+    .seat-item.seat-vip {
+        background-color: #fff1f0;
+        border-color: #ff4d4f;
+        color: #ff4d4f;
+    }
+
+    .seat-item.selected {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        color: white !important;
+    }
+
+    .seat-item.occupied {
+        background-color: #e9ecef !important;
+        border-color: #dee2e6 !important;
+        color: #adb5bd !important;
+        cursor: not-allowed;
+    }

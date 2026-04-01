@@ -1,16 +1,13 @@
 ﻿@model WebPhim.Models.Phim
-
 @{
     ViewData["Title"] = Model.TenPhim + " - Chi tiết";
 }
 
 @section Styles {
-    @* Gọi file CSS riêng đã tạo ở trên *@
     <link rel="stylesheet" href="~/css/MovieDetail.css" asp-append-version="true" />
 }
 
-<div class="container py-5 movie-detail-container">
-    @* Nút quay lại *@
+<div class="container py-5">
     <div class="mb-4">
         <a asp-action="Index" class="text-decoration-none text-muted">
             <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
@@ -18,65 +15,43 @@
     </div>
 
     <div class="row g-5">
-        @* Cột Poster bên trái *@
         <div class="col-lg-4">
             <div class="sticky-top" style="top: 20px;">
-                <div class="card poster-card shadow-lg border-0">
-                    <img src="@Model.HinhAnh" class="img-fluid" alt="@Model.TenPhim">
-                </div>
-
-                <div class="d-grid gap-3 mt-4">
-                    <button class="btn btn-watch-now btn-lg rounded-pill fw-bold py-3 shadow">
-                        <i class="fas fa-play me-2"></i>XEM PHIM
-                    </button>
-                    <button class="btn btn-outline-dark btn-lg rounded-pill fw-bold py-2">
-                        <i class="fas fa-heart me-2"></i>YÊU THÍCH
-                    </button>
+                <img src="@Model.HinhAnh" class="img-fluid rounded-4 shadow-lg w-100" alt="@Model.TenPhim">
+                <div class="d-grid gap-2 mt-4">
+                    <a href="#suat-chieu" class="btn btn-danger btn-lg rounded-pill fw-bold">ĐẶT VÉ NGAY</a>
                 </div>
             </div>
         </div>
 
-        @* Cột thông tin bên phải *@
         <div class="col-lg-8">
-            <h1 class="display-4 fw-bold mb-3">@Model.TenPhim</h1>
+            <h1 class="display-5 fw-bold">@Model.TenPhim</h1>
+            <p class="text-muted">@Model.LoaiPhim | @Model.ThoiLuong phút | @Model.DaoDien</p>
 
-            <div class="d-flex flex-wrap gap-2 mb-4">
-                <span class="badge rounded-pill bg-primary px-3 py-2">@Model.LoaiPhim</span>
-                <span class="badge rounded-pill bg-secondary px-3 py-2">@Model.ThoiLuong phút</span>
-                <span class="badge rounded-pill bg-dark px-3 py-2">@Model.KhuVuc</span>
-            </div>
+            <h5 class="fw-bold mt-4">NỘI DUNG</h5>
+            <p class="text-secondary" style="text-align: justify; line-height: 1.7;">@Model.MoTa</p>
 
-            <div class="card info-badge shadow-sm p-4 mb-4">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <small class="text-muted d-block text-uppercase fw-bold">Đạo diễn</small>
-                        <span class="fs-5 fw-bold text-dark">@Model.DaoDien</span>
-                    </div>
-                    <div class="col-sm-6">
-                        <small class="text-muted d-block text-uppercase fw-bold">Trạng thái</small>
-                        <span class="fs-5 fw-bold text-success">Đang công chiếu</span>
-                    </div>
+            <hr class="my-5" id="suat-chieu">
+
+            <h4 class="fw-bold mb-4 text-primary">SUẤT CHIẾU TẠI RẠP</h4>
+            @if (Model.LichChieus != null && Model.LichChieus.Any())
+            {
+                <div class="row g-3">
+                    @foreach (var lc in Model.LichChieus.OrderBy(x => x.ThoiGianChieu))
+                    {
+                        <div class="col-md-4">
+                            <a asp-controller="DatVe" asp-action="ChonGhe" asp-route-id="@lc.Id" class="btn btn-outline-primary w-100 py-3 rounded-3 shadow-sm">
+                                <div class="fw-bold fs-5">@lc.ThoiGianChieu.ToString("HH:mm")</div>
+                                <small class="d-block text-dark">@lc.Phong?.Rap?.TenRap - @lc.Phong?.TenPhong</small>
+                            </a>
+                        </div>
+                    }
                 </div>
-            </div>
-
-            <div class="description-section">
-                <h4 class="fw-bold mb-3 border-start border-4 border-primary ps-3">Nội dung cốt truyện</h4>
-                <p class="movie-description fs-5">
-                    @Model.MoTa
-                </p>
-            </div>
-
-            <hr class="my-5">
-
-            <div class="alert alert-info border-0 rounded-4 p-4 shadow-sm">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-info-circle fs-2 me-3"></i>
-                    <div>
-                        <h6 class="fw-bold mb-1">Lưu ý bản quyền</h6>
-                        <p class="small mb-0">Phim này thuộc bản quyền của nhà sản xuất. Hiếu vui lòng không sao chép nội dung khi chưa được phép.</p>
-                    </div>
-                </div>
-            </div>
+            }
+            else
+            {
+                <div class="alert alert-light border">Chưa có lịch chiếu cho phim này.</div>
+            }
         </div>
     </div>
 </div>
