@@ -4,54 +4,104 @@
 }
 
 @section Styles {
+    @* File CSS chung giúp đồng bộ giao diện và fix z-index *@
     <link rel="stylesheet" href="~/css/MovieDetail.css" asp-append-version="true" />
 }
 
-<div class="container py-5">
+@* Thêm class wrapper để tránh lỗi bị che bởi Navbar *@
+<div class="container py-5 movie-details-wrapper">
     <div class="mb-4">
-        <a asp-action="Index" class="text-decoration-none text-muted">
-            <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+        @* FIX: Sử dụng history.back() để quay lại đúng vị trí poster đã chọn trước đó *@
+        <a href="javascript:void(0);" onclick="history.back();" class="text-decoration-none text-muted fw-500">
+            <i class="fas fa-chevron-left me-2"></i>Quay lại danh sách
         </a>
     </div>
 
     <div class="row g-5">
+        @* CỘT TRÁI: POSTER & NÚT ĐẶT VÉ *@
         <div class="col-lg-4">
-            <div class="sticky-top" style="top: 20px;">
-                <img src="@Model.HinhAnh" class="img-fluid rounded-4 shadow-lg w-100" alt="@Model.TenPhim">
-                <div class="d-grid gap-2 mt-4">
-                    <a href="#suat-chieu" class="btn btn-danger btn-lg rounded-pill fw-bold">ĐẶT VÉ NGAY</a>
+            <div class="sticky-top" style="top: 100px; z-index: 10;">
+
+                @* --- POSTER ĐÃ ĐƯỢC PHÓNG TO (320px) --- *@
+                <div class="poster-container" style="max-width: 320px; margin: 0 auto;">
+                    <div class="poster-card shadow-lg" style="background-color: #f8f9fa; border-radius: 20px; overflow: hidden;">
+                        @if (!string.IsNullOrEmpty(Model.HinhAnh))
+                        {
+                            @* FIX: Sử dụng contain để hiển thị trọn vẹn poster Conan *@
+                            <img src="@Model.HinhAnh" class="img-fluid" alt="@Model.TenPhim"
+                                 style="width: 100%;
+                                            height: auto;
+                                            max-height: 500px;
+                                            object-fit: contain;
+                                            display: block;
+                                            margin: 0 auto;">
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center justify-content-center" style="height: 480px;">
+                                <i class="fas fa-image fa-3x text-muted"></i>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mt-4" style="max-width: 320px; margin-left: auto; margin-right: auto;">
+                    <a href="#suat-chieu" class="btn btn-watch-now shadow-sm py-3">
+                        <i class="fas fa-ticket-alt"></i> ĐẶT VÉ NGAY
+                    </a>
                 </div>
             </div>
         </div>
 
+        @* CỘT PHẢI: NỘI DUNG & SUẤT CHIẾU *@
         <div class="col-lg-8">
-            <h1 class="display-5 fw-bold">@Model.TenPhim</h1>
-            <p class="text-muted">@Model.LoaiPhim | @Model.ThoiLuong phút | @Model.DaoDien</p>
-
-            <h5 class="fw-bold mt-4">NỘI DUNG</h5>
-            <p class="text-secondary" style="text-align: justify; line-height: 1.7;">@Model.MoTa</p>
-
-            <hr class="my-5" id="suat-chieu">
-
-            <h4 class="fw-bold mb-4 text-primary">SUẤT CHIẾU TẠI RẠP</h4>
-            @if (Model.LichChieus != null && Model.LichChieus.Any())
-            {
-                <div class="row g-3">
-                    @foreach (var lc in Model.LichChieus.OrderBy(x => x.ThoiGianChieu))
-                    {
-                        <div class="col-md-4">
-                            <a asp-controller="DatVe" asp-action="ChonGhe" asp-route-id="@lc.Id" class="btn btn-outline-primary w-100 py-3 rounded-3 shadow-sm">
-                                <div class="fw-bold fs-5">@lc.ThoiGianChieu.ToString("HH:mm")</div>
-                                <small class="d-block text-dark">@lc.Phong?.Rap?.TenRap - @lc.Phong?.TenPhong</small>
-                            </a>
-                        </div>
-                    }
+            <div class="movie-header mb-4">
+                <h1 class="display-5 fw-bold text-dark movie-title">@Model.TenPhim</h1>
+                <div class="d-flex flex-wrap gap-3 mt-3 text-muted">
+                    <span class="badge bg-danger rounded-pill px-3 py-2 shadow-sm">@Model.LoaiPhim</span>
+                    <span><i class="far fa-clock me-1 text-danger"></i> @Model.ThoiLuong phút</span>
+                    <span><i class="fas fa-user-tie me-1 text-danger"></i> Đạo diễn: @Model.DaoDien</span>
                 </div>
-            }
-            else
-            {
-                <div class="alert alert-light border">Chưa có lịch chiếu cho phim này.</div>
-            }
+            </div>
+
+            <div class="content-section mb-5">
+                <h5 class="fw-bold text-uppercase small text-muted mb-3"><i class="fas fa-info-circle me-2"></i>Nội dung phim</h5>
+                <p class="movie-description shadow-sm">@Model.MoTa</p>
+            </div>
+
+            <hr class="my-5 opacity-25" id="suat-chieu">
+
+            <div class="booking-section">
+                <h4 class="fw-bold mb-4 text-dark"><i class="fas fa-calendar-alt me-2 text-danger"></i>LỊCH CHIẾU TẠI RẠP</h4>
+
+                @if (Model.LichChieus != null && Model.LichChieus.Any())
+                {
+                    <div class="row g-3">
+                        @foreach (var lc in Model.LichChieus.OrderBy(x => x.ThoiGianChieu))
+                        {
+                            <div class="col-md-4 col-6">
+                                <a asp-controller="DatVe" asp-action="ChonGhe" asp-route-id="@lc.Id" class="text-decoration-none">
+                                    <div class="time-slot shadow-sm border-0 h-100 p-3 rounded-4">
+                                        <div class="theater-name text-muted mb-1 fw-bold" style="font-size: 0.7rem;">
+                                            @lc.Phong?.Rap?.TenRap
+                                        </div>
+                                        <div class="fw-bold fs-4 text-danger">@lc.ThoiGianChieu.ToString("HH:mm")</div>
+                                        <div class="small text-secondary mt-1">@lc.Phong?.TenPhong</div>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-light border rounded-4 p-5 text-center shadow-sm">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3 d-block"></i>
+                        <h6 class="fw-bold text-dark">Chưa có lịch chiếu</h6>
+                        <span class="text-secondary small">Quay lại sau để cập nhật suất chiếu mới nhất!</span>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>

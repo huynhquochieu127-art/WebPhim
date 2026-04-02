@@ -1,0 +1,74 @@
+﻿@model WebPhim.Models.Rap
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Rạp - Admin";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            @* Thẻ Card đồng bộ với giao diện Quản trị *@
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h4 class="mb-0 fw-bold text-dark text-center">
+                        <i class="fas fa-edit me-2 text-primary"></i>CẬP NHẬT THÔNG TIN RẠP
+                    </h4>
+                </div>
+
+                <div class="card-body p-4 pt-0">
+                    <hr class="opacity-10 mb-4">
+
+                    <form asp-action="Edit">
+                        @* Quan trọng: Cần giữ Id để Controller biết đang sửa rạp nào *@
+                        <input type="hidden" asp-for="Id" />
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                        @* Trường nhập Tên Rạp *@
+                        <div class="mb-3">
+                            <label asp-for="TenRap" class="form-label fw-bold text-muted small text-uppercase">Tên Hệ Thống Rạp</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="fas fa-film text-secondary"></i></span>
+                                <input asp-for="TenRap" class="form-control border-start-0 bg-light" placeholder="Ví dụ: CGV Hùng Vương..." />
+                            </div>
+                            <span asp-validation-for="TenRap" class="text-danger small"></span>
+                        </div>
+
+                        @* Trường nhập Địa Chỉ *@
+                        <div class="mb-4">
+                            <label asp-for="DiaChi" class="form-label fw-bold text-muted small text-uppercase">Địa Chỉ Chi Nhánh</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="fas fa-map-marker-alt text-secondary"></i></span>
+                                <input asp-for="DiaChi" class="form-control border-start-0 bg-light" placeholder="Nhập địa chỉ chi tiết..." />
+                            </div>
+                            <span asp-validation-for="DiaChi" class="text-danger small"></span>
+                        </div>
+
+                        @* Nhóm nút bấm *@
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary py-2 rounded-3 shadow-sm fw-bold">
+                                <i class="fas fa-save me-2"></i>LƯU THAY ĐỔI
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary py-2 rounded-3">
+                                <i class="fas fa-undo me-2"></i>Hủy bỏ
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @* Link quay lại nhanh dưới Card *@
+            <div class="text-center mt-3">
+                <a href="javascript:void(0);" onclick="history.back();" class="text-decoration-none text-muted small">
+                    <i class="fas fa-arrow-left me-1"></i>Quay lại trang trước đó
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
