@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WebPhim.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
-using WebPhim.Data; // Đảm bảo folder chứa DatVeDbContext là 'Data'
+using WebPhim.Data;
 
 namespace WebPhim.Areas.Admin.Controllers
 {
@@ -21,6 +21,7 @@ namespace WebPhim.Areas.Admin.Controllers
             _hostEnvironment = hostEnvironment;
         }
 
+        // 1. DANH SÁCH PHIM
         public async Task<IActionResult> Index(string searchTerm)
         {
             var query = _context.Phims.AsQueryable();
@@ -32,12 +33,29 @@ namespace WebPhim.Areas.Admin.Controllers
             return View(await query.ToListAsync());
         }
 
+        // 2. CHI TIẾT PHIM (Ép đường dẫn để không hiện nút đặt vé của người dùng)
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var phim = await _context.Phims
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (phim == null) return NotFound();
+
+            // Chỉ định rõ ràng file View trong Admin để tránh nhận nhầm Layout người dùng
+            return View("~/Areas/Admin/Views/Phim/Details.cshtml", phim);
+        }
+
+        // 3. TẠO MỚI PHIM (GET)
         public IActionResult Create() => View();
 
+        // 4. TẠO MỚI PHIM (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Phim phim)
         {
+            // Loại bỏ các trường không nhập trực tiếp từ form để ModelState hợp lệ
             ModelState.Remove("HinhAnh");
             ModelState.Remove("LichChieus");
 
@@ -45,42 +63,28 @@ namespace WebPhim.Areas.Admin.Controllers
             {
                 if (phim.FileAnh != null)
                 {
-                    // Dùng _hostEnvironment.WebRootPath để lấy đường dẫn wwwroot chuẩn
                     string wwwRootPath = _hostEnvironment.WebRootPath;
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(phim.FileAnh.FileName);
-
-                    // FIX: Thêm "posters" vào đường dẫn kết hợp
                     string folderPath = Path.Combine(wwwRootPath, "images", "posters");
 
-                    if (!Directory.Exists(folderPath))
-                        Directory.CreateDirectory(folderPath);
+                    if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
 
                     string filePath = Path.Combine(folderPath, fileName);
-
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await phim.FileAnh.CopyToAsync(fileStream);
                     }
-
-                    // Gán đường dẫn chuẩn để hiển thị trên web
                     phim.HinhAnh = "/images/posters/" + fileName;
                 }
 
-                try
-                {
-                    _context.Add(phim);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", "Lỗi khi lưu vào DB: " + ex.Message);
-                }
+                _context.Add(phim);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
             return View(phim);
         }
-        // 1. Giao diện Sửa
-        [HttpGet]
+
+        // 5. CHỈNH SỬA PHIM (GET)
         public async Task<IActionResult> Edit(int id)
         {
             var phim = await _context.Phims.FindAsync(id);
@@ -88,40 +92,37 @@ namespace WebPhim.Areas.Admin.Controllers
             return View(phim);
         }
 
+        // 6. CHỈNH SỬA PHIM (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Phim phim, IFormFile? FileAnh)
         {
             if (id != phim.Id) return NotFound();
 
+            // Hiếu lưu ý: Remove các trường này để tránh lỗi Validation khi không có ảnh mới hoặc List trống
+            ModelState.Remove("FileAnh");
+            ModelState.Remove("LichChieus");
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var existingPhim = await _context.Phims.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+
                     if (FileAnh != null)
                     {
                         string wwwRootPath = _hostEnvironment.WebRootPath;
 
-                        // --- KHÚC NÀY LÀ ĐỂ XÓA ẢNH CŨ ---
-                        // Lấy lại thông tin phim từ DB để biết tên file cũ
-                        var oldPhim = await _context.Phims.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
-                        if (oldPhim != null && !string.IsNullOrEmpty(oldPhim.HinhAnh))
+                        // Xóa ảnh cũ trên server
+                        if (existingPhim != null && !string.IsNullOrEmpty(existingPhim.HinhAnh))
                         {
-                            // Chuyển đường dẫn ảo (/images/posters/...) thành đường dẫn vật lý (C:\...)
-                            string oldFilePath = Path.Combine(wwwRootPath, oldPhim.HinhAnh.TrimStart('/'));
-
-                            // Nếu file tồn tại thì xóa đi
-                            if (System.IO.File.Exists(oldFilePath))
-                            {
-                                System.IO.File.Delete(oldFilePath);
-                            }
+                            string oldFilePath = Path.Combine(wwwRootPath, existingPhim.HinhAnh.TrimStart('/'));
+                            if (System.IO.File.Exists(oldFilePath)) System.IO.File.Delete(oldFilePath);
                         }
-                        // ---------------------------------
 
-                        // Lưu file mới như bình thường
-                        string fileName = Guid.NewGuid().ToString() + "_" + FileAnh.FileName;
+                        // Lưu ảnh mới
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(FileAnh.FileName);
                         string folderPath = Path.Combine(wwwRootPath, "images", "posters");
-
                         if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
 
                         string filePath = Path.Combine(folderPath, fileName);
@@ -129,20 +130,28 @@ namespace WebPhim.Areas.Admin.Controllers
                         {
                             await FileAnh.CopyToAsync(stream);
                         }
-
                         phim.HinhAnh = "/images/posters/" + fileName;
+                    }
+                    else
+                    {
+                        // Giữ ảnh cũ nếu không chọn file mới
+                        phim.HinhAnh = existingPhim?.HinhAnh;
                     }
 
                     _context.Update(phim);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException) { /* ... */ }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.Phims.Any(e => e.Id == phim.Id)) return NotFound();
+                    else throw;
+                }
             }
             return View(phim);
         }
-        // 1. Hiển thị trang xác nhận xóa (Giao diện Hiếu vừa gửi)
-        [HttpGet]
+
+        // 7. XÁC NHẬN XÓA (GET)
         public async Task<IActionResult> Delete(int id)
         {
             var phim = await _context.Phims.FindAsync(id);
@@ -150,28 +159,22 @@ namespace WebPhim.Areas.Admin.Controllers
             return View(phim);
         }
 
-        // 2. Thực hiện xóa vĩnh viễn (Khớp với asp-action="DeleteConfirmed")
-        [HttpPost, ActionName("DeleteConfirmed")]
+        // 8. THỰC HIỆN XÓA (POST) - Khớp tên Action "Delete" với nút bấm ở View
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var phim = await _context.Phims.FindAsync(id);
             if (phim != null)
             {
-                // XÓA FILE ẢNH VẬT LÝ TRONG THƯ MỤC POSTERS
+                // Xóa file ảnh vật lý để đỡ tốn dung lượng host
                 if (!string.IsNullOrEmpty(phim.HinhAnh))
                 {
                     string wwwRootPath = _hostEnvironment.WebRootPath;
-                    // Loại bỏ dấu gạch chéo ở đầu đường dẫn ảo để nối chuỗi chuẩn
                     string filePath = Path.Combine(wwwRootPath, phim.HinhAnh.TrimStart('/'));
-
-                    if (System.IO.File.Exists(filePath))
-                    {
-                        System.IO.File.Delete(filePath);
-                    }
+                    if (System.IO.File.Exists(filePath)) System.IO.File.Delete(filePath);
                 }
 
-                // Xóa dữ liệu trong Database
                 _context.Phims.Remove(phim);
                 await _context.SaveChangesAsync();
             }

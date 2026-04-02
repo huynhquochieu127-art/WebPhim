@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebPhim.Data;
 using WebPhim.Models;
+using Microsoft.AspNetCore.Localization; // Thêm dòng này
+using System.Globalization; // Thêm dòng này
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 // 2. Đăng ký DbContext
 builder.Services.AddDbContext<DatVeDbContext>(options =>
     options.UseSqlServer(connectionString));
-//123
+
 // 3. Cấu hình Identity
 builder.Services.AddDefaultIdentity<NguoiDung>(options => {
     options.SignIn.RequireConfirmedAccount = false;
@@ -25,11 +27,29 @@ builder.Services.AddDefaultIdentity<NguoiDung>(options => {
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<DatVeDbContext>();
 
+// --- FIX: Cấu hình Cookie ---
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    options.LogoutPath = "/Identity/Account/Logout";
+});
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
+// --- FIX: Cấu hình Localization để nhận diện ngày tháng Tiếng Việt (dd/MM/yyyy) ---
+var supportedCultures = new[] { new CultureInfo("vi-VN") };
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("vi-VN"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+});
+
+// --- GIỮ NGUYÊN PHẦN MIDDLEWARE ---
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -43,21 +63,21 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// --- CẤU HÌNH ROUTE (THAY ĐỔI Ở ĐÂY) ---
-
-// 1. Route dành cho Areas (Phải nằm TRƯỚC default route)
+// Route cho Areas (Admin) và Default
+// Đặt cái Admin lên TRƯỚC
+// Đặt cái Route cho Area lên TRƯỚC
 app.MapControllerRoute(
-    name: "MyAreas",
+    name: "MyAreas", // Tên này ông đặt là Admin hay MyAreas đều được
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-// 2. Route mặc định cho khách xem phim
+// Rồi mới tới Route mặc định
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
 
-// --- PHẦN SEED DATA (GÁN QUYỀN ADMIN) ---
+// --- SEED DATA CHO ADMIN ---
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

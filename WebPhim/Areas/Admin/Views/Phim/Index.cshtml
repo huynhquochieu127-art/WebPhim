@@ -2,37 +2,43 @@
 
 @{
     ViewData["Title"] = "Quản lý danh sách phim";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-primary fw-bold"><i class="fas fa-list me-2"></i>Danh Sách Phim</h2>
-        <a asp-action="Create" class="btn btn-success shadow-sm rounded-pill px-4">
+        <h2 class="text-primary fw-bold">
+            <i class="fas fa-film me-2"></i>Quản Lý Danh Sách Phim
+        </h2>
+        <a asp-area="Admin" asp-controller="Phim" asp-action="Create" class="btn btn-success shadow-sm rounded-pill px-4">
             <i class="fas fa-plus-circle me-1"></i> Thêm Phim Mới
         </a>
     </div>
 
-    @* Thanh tìm kiếm *@
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
-            <form asp-action="Index" method="get" class="row g-2">
+            <form asp-area="Admin" asp-controller="Phim" asp-action="Index" method="get" class="row g-2">
                 <div class="col-md-10">
-                    <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" class="form-control" placeholder="Tìm theo tên phim hoặc đạo diễn...">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="fas fa-search text-muted"></i></span>
+                        <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" class="form-control border-start-0 bg-light" placeholder="Tìm theo tên phim hoặc đạo diễn...">
+                    </div>
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">Lọc ngay</button>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter me-1"></i> Lọc ngay
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
-    @* Bảng hiển thị *@
     <div class="card shadow-sm border-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+                <thead class="table-dark">
                     <tr>
-                        <th>Hình ảnh</th>
+                        <th style="width: 100px;">Hình ảnh</th>
                         <th>Tên phim</th>
                         <th>Thể loại</th>
                         <th>Thời lượng</th>
@@ -41,24 +47,56 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@item.HinhAnh" class="rounded shadow-sm border"
+                                         style="width: 70px; height: 95px; object-fit: cover;"
+                                         onerror="this.src='https://placehold.co/70x95?text=No+Img'">
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark">@item.TenPhim</div>
+                                    <small class="text-muted">ID: #@item.Id</small>
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill bg-info text-dark px-3">@item.LoaiPhim</span>
+                                </td>
+                                <td>
+                                    <i class="far fa-clock me-1 text-muted"></i>@item.ThoiLuong phút
+                                </td>
+                                <td>@item.DaoDien</td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        @* QUAN TRỌNG: Phải có asp-area="Admin" *@
+                                        <a asp-area="Admin" asp-controller="Phim" asp-action="Details" asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+
+                                        <a asp-area="Admin" asp-controller="Phim" asp-action="Edit" asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-warning" title="Sửa thông tin">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+
+                                        <a asp-area="Admin" asp-controller="Phim" asp-action="Delete" asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-danger" title="Xóa phim"
+                                           onclick="return confirm('Hiếu có chắc chắn muốn xóa phim [@item.TenPhim] không?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
-                            <td>
-                                <img src="@item.HinhAnh" class="rounded shadow-sm" style="width: 60px; height: 80px; object-fit: cover;"
-                                     onerror="this.src='https://placehold.co/60x80?text=No+Img'">
-                            </td>
-                            <td class="fw-bold">@item.TenPhim</td>
-                            <td><span class="badge bg-info text-dark">@item.LoaiPhim</span></td>
-                            <td>@item.ThoiLuong phút</td>
-                            <td>@item.DaoDien</td>
-                            <td class="text-center">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning me-1">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">
-                                    <i class="fas fa-trash"></i>
-                                </a>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="fas fa-folder-open fs-2 d-block mb-2"></i>
+                                Không tìm thấy phim nào phù hợp.
                             </td>
                         </tr>
                     }

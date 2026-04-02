@@ -1,147 +1,79 @@
 ﻿@model WebPhim.Models.Phim
 @{
-    ViewData["Title"] = "Chi tiết phim - Admin";
+    ViewData["Title"] = "Quản lý phim: " + Model.TenPhim;
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/MovieDetail.css" asp-append-version="true" />
-}
+<div class="container-fluid py-4">
+    <div class="d-flex align-items-center mb-4">
+        <<a href="javascript:void(0);" onclick="history.back();" class="btn btn-outline-secondary btn-sm rounded-pill me-3">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+        <h2 class="h3 mb-0 fw-bold text-dark">Chi tiết phim hệ thống</h2>
+    </div>
 
-<div class="container py-4 movie-details-wrapper">
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            @* FIX: Sử dụng onclick để quay lại đúng vị trí cũ *@
-            <li class="breadcrumb-item">
-                <a href="javascript:void(0);" onclick="history.back();" class="text-decoration-none text-muted">Quản lý Phim</a>
-            </li>
-            <li class="breadcrumb-item active fw-bold text-dark">Chi tiết: @Model.TenPhim</li>
-        </ol>
-    </nav>
-
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white movie-detail-container">
-        <div class="card-body p-lg-5">
-            <div class="row g-5">
-
-                @* CỘT TRÁI: POSTER PHIM *@
-                <div class="col-md-4">
-                    <div class="poster-card shadow-lg" style="background-color: #f8f9fa; border-radius: 20px; overflow: hidden;">
-                        @if (!string.IsNullOrEmpty(Model.HinhAnh))
-                        {
-                            <img src="@Model.HinhAnh" class="img-fluid" alt="@Model.TenPhim"
-                                 style="width: 100%; height: auto; max-height: 500px; object-fit: contain; display: block; margin: 0 auto;">
-                        }
-                        else
-                        {
-                            <div class="d-flex align-items-center justify-content-center" style="height: 480px;">
-                                <i class="fas fa-image fa-3x text-muted"></i>
-                            </div>
-                        }
-                    </div>
-
-                    <div class="mt-4 p-3 bg-light rounded-4 text-center shadow-sm" style="max-width: 320px; margin: 20px auto 0;">
-                        <span class="small text-muted d-block mb-2 fw-500">TRẠNG THÁI HỆ THỐNG</span>
-                        <span class="badge @(Model.ThoiLuong > 0 ? "bg-success" : "bg-warning text-dark") px-3 py-2 rounded-pill shadow-sm">
-                            <i class="fas @(Model.ThoiLuong > 0 ? "fa-check-circle" : "fa-clock") me-1"></i>
-                            @(Model.ThoiLuong > 0 ? "ĐANG PHÁT HÀNH" : "CHỜ CẬP NHẬT")
-                        </span>
+    <div class="row">
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
+                <div class="position-relative">
+                    <img src="@Model.HinhAnh" class="w-100 d-block" style="object-fit: cover; height: 500px;"
+                         onerror="this.src='https://placehold.co/500x750?text=No+Poster'">
+                    <div class="position-absolute top-0 end-0 m-3">
+                        <span class="badge bg-danger shadow-sm px-3 py-2">@Model.LoaiPhim</span>
                     </div>
                 </div>
-
-                @* CỘT PHẢI: THÔNG TIN *@
-                <div class="col-md-8">
-                    <div class="d-flex justify-content-between align-items-start mb-4">
-                        <div>
-                            <h1 class="fw-bold mb-1 text-dark display-6">@Model.TenPhim</h1>
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="badge bg-light text-secondary border px-2 py-1">ID: #@Model.Id</span>
-                                <span class="text-muted small">| Cập nhật: @DateTime.Now.ToString("dd/MM/yyyy")</span>
-                            </div>
-                        </div>
-                        <span class="badge bg-danger rounded-pill px-4 py-2 shadow-sm fs-6">@Model.LoaiPhim</span>
-                    </div>
-
-                    <div class="row g-4 mb-4 pb-4 border-bottom">
-                        <div class="col-6 col-md-4">
-                            <div class="p-3 bg-white border rounded-3 text-center shadow-sm h-100">
-                                <i class="far fa-clock text-danger mb-2 fs-4"></i>
-                                <div class="small text-muted">Thời lượng</div>
-                                <div class="fw-bold">@Model.ThoiLuong phút</div>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-4">
-                            <div class="p-3 bg-white border rounded-3 text-center shadow-sm h-100">
-                                <i class="fas fa-user-tie text-danger mb-2 fs-4"></i>
-                                <div class="small text-muted">Đạo diễn</div>
-                                <div class="fw-bold text-truncate">@Model.DaoDien</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-5">
-                        <h5 class="fw-bold text-uppercase small text-muted mb-3 d-flex align-items-center">
-                            <span class="bg-danger d-inline-block me-2" style="width: 4px; height: 16px;"></span>
-                            Tóm tắt nội dung quản trị
-                        </h5>
-                        <p class="text-secondary movie-description p-3 bg-light rounded-3">@Model.MoTa</p>
-                    </div>
-
-                    @* HÀNH ĐỘNG QUẢN TRỊ *@
-                    <div class="d-flex gap-3 pt-4">
-                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-dark px-5 py-2 rounded-pill shadow">
-                            <i class="fas fa-edit me-2"></i>Chỉnh sửa thông tin
-                        </a>
-                        @* FIX: Nút quay lại giữ vị trí cũ *@
-                        <button type="button" onclick="history.back();" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
-                            <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
-                        </button>
-                    </div>
+                <div class="card-body bg-light text-center border-top">
+                    <p class="text-muted small mb-1">Mã định danh phim (ID)</p>
+                    <h5 class="fw-bold text-primary">#@Model.Id</h5>
                 </div>
             </div>
         </div>
-    </div>
 
-    @* QUẢN LÝ SUẤT CHIẾU *@
-    <div class="mt-5 pt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="fw-bold mb-0 text-dark">
-                <i class="fas fa-calendar-check me-2 text-danger"></i>Suất chiếu hoạt động
-            </h4>
-            <a asp-controller="SuatChieu" asp-action="Create" asp-route-phimId="@Model.Id" class="btn btn-danger btn-sm rounded-pill px-3 py-2 shadow-sm">
-                <i class="fas fa-plus-circle me-1"></i>Thêm suất chiếu
-            </a>
-        </div>
-
-        <div class="row g-3">
-            @if (Model.LichChieus != null && Model.LichChieus.Any())
-            {
-                @foreach (var lc in Model.LichChieus.OrderBy(x => x.ThoiGianChieu))
-                {
-                    <div class="col-md-4">
-                        <div class="time-slot shadow-sm border-0 bg-white p-3 rounded-4 h-100">
-                            <div class="theater-name text-uppercase text-muted small fw-bold mb-2">@lc.Phong?.Rap?.TenRap</div>
-                            <div class="fs-3 text-danger fw-bold mb-1">@lc.ThoiGianChieu.ToString("HH:mm")</div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="small text-secondary fw-500">@lc.Phong?.TenPhong</span>
-                                <span class="badge bg-light text-dark border rounded-pill">45/50 Ghế</span>
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h1 class="display-6 fw-bold text-dark mb-2">@Model.TenPhim</h1>
+                            <div class="d-flex gap-3 text-muted">
+                                <span><i class="far fa-clock me-1 text-primary"></i> @Model.ThoiLuong phút</span>
+                                <span><i class="fas fa-user-tie me-1 text-primary"></i> Đạo diễn: @Model.DaoDien</span>
                             </div>
-                            <div class="mt-2 pt-2 border-top d-flex gap-2">
-                                <a asp-controller="SuatChieu" asp-action="Edit" asp-route-id="@lc.Id" class="btn btn-sm btn-link text-muted p-0 text-decoration-none">Sửa</a>
-                                <form asp-controller="SuatChieu" asp-action="Delete" asp-route-id="@lc.Id" method="post" onsubmit="return confirm('Xóa suất chiếu này?');">
-                                    <button type="submit" class="btn btn-sm btn-link text-danger p-0 text-decoration-none">Xóa</button>
-                                </form>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a asp-area="Admin" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning rounded-pill px-4 shadow-sm">
+                                <i class="fas fa-edit me-1"></i> Chỉnh sửa
+                            </a>
+                        </div>
+                    </div>
+
+                    <hr class="my-4" style="opacity: 0.1;">
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold text-dark mb-3"><i class="fas fa-align-left me-2 text-primary"></i>Nội dung phim</h5>
+                        <div class="p-3 rounded-3 bg-light border">
+                            <p class="text-secondary mb-0" style="line-height: 1.6; text-align: justify;">
+                                @(string.IsNullOrEmpty(Model.MoTa) ? "Chưa có mô tả cho phim này." : Model.MoTa)
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded-3 bg-white">
+                                <span class="text-muted small d-block mb-1">Trạng thái</span>
+                                <span class="fw-bold text-success"><i class="fas fa-check-circle me-1"></i> Đang khả dụng</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded-3 bg-white">
+                                <span class="text-muted small d-block mb-1">Khu vực hiển thị</span>
+                                <span class="fw-bold text-info"><i class="fas fa-globe me-1"></i> Toàn hệ thống</span>
                             </div>
                         </div>
                     </div>
-                }
-            }
-            else
-            {
-                <div class="col-12">
-                    <div class="alert alert-secondary border-0 rounded-4 text-center p-4">
-                        <i class="fas fa-info-circle mb-2"></i> Chưa có suất chiếu.
-                    </div>
                 </div>
-            }
+            </div>
         </div>
     </div>
 </div>

@@ -1,0 +1,136 @@
+﻿/* ============================================================
+   STYLE CHI TIẾT PHIM - USER (BẢN ĐÃ FIX LỖI TAB & MEDIA QUERY)
+   ============================================================ */
+
+/* --- 1. WRAPPER & CHUNG --- */
+.movie-details-wrapper {
+    margin-top: 20px;
+}
+
+.movie-title {
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-weight: 800; /* Tăng độ đậm cho tiêu đề chính */
+}
+
+.movie-description {
+    line-height: 1.8;
+    text-align: justify;
+    color: #4b5563;
+}
+
+/* --- 2. FIX POSTER: HIỂN THỊ TRỌN VẸN 100% --- */
+.poster-container {
+    max-width: 320px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 5 !important;
+}
+
+.poster-card {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    transition: all 0.4s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    background: #000; /* Nền đen để poster nổi bật hơn nếu ảnh bị hụt */
+}
+
+    .poster-card img {
+        width: 100% !important;
+        height: auto !important;
+        max-height: 500px;
+        object-fit: contain !important;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .poster-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    }
+
+/* --- 3. STYLE CHO TABS THỨ/NGÀY (NAV-PILLS) --- */
+.nav-date-pills {
+    gap: 10px;
+    padding-bottom: 10px;
+}
+
+    .nav-date-pills .nav-link {
+        background: #fff;
+        border: 1px solid #dee2e6;
+        color: #444;
+        min-width: 90px;
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        padding: 12px 8px;
+        text-align: center;
+    }
+
+        .nav-date-pills .nav-link.active {
+            background-color: #dc3545 !important;
+            border-color: #dc3545 !important;
+            color: #fff !important;
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+        }
+
+        .nav-date-pills .nav-link:hover:not(.active) {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+/* CHÌA KHÓA: Ép ẩn các nội dung không được chọn (Để ngoài Media Query) */
+.tab-content > .tab-pane:not(.active) {
+    display: none !important;
+}
+
+/* --- 4. Ô GIỜ CHIẾU (TIME SLOT) --- */
+.time-slot {
+    background: #fff;
+    border: 1px solid #eee;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border-radius: 15px;
+    height: 100%; /* Đảm bảo các ô cao bằng nhau */
+}
+
+    .time-slot:hover {
+        transform: translateY(-5px);
+        border-color: #dc3545;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important;
+    }
+
+/* --- 5. RESPONSIVE --- */
+@media (max-width: 768px) {
+    .poster-container {
+        max-width: 260px;
+        margin-bottom: 30px;
+    }
+
+    .poster-card img {
+        max-height: 380px;
+    }
+
+    .movie-title {
+        font-size: 1.8rem;
+        text-align: center;
+    }
+
+    .nav-date-pills {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 15px;
+    }
+
+        /* Tùy chọn: Hiện thanh cuộn mờ mờ trên di động để biết là vuốt được */
+        .nav-date-pills::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .nav-date-pills::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 10px;
+        }
+}

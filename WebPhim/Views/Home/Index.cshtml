@@ -14,32 +14,86 @@
         @foreach (var item in Model)
         {
             <div class="col">
-                <a asp-controller="Phim" asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none">
-                    <div class="card movie-card h-100 border-0 bg-transparent">
-
-                        @* Phần Poster *@
-                        <div class="poster-wrapper">
-                            <div class="movie-badge">
-                                <span class="badge rounded-pill shadow-sm">@item.LoaiPhim</span>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <a asp-area="Admin" asp-controller="Phim" asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none movie-link">
+                        <div class="card movie-card h-100 border-0 bg-transparent">
+                            <div class="poster-wrapper">
+                                <div class="movie-badge">
+                                    <span class="badge rounded-pill shadow-sm bg-primary">ADMIN VIEW</span>
+                                </div>
+                                <img src="@(item.HinhAnh ?? "https://placehold.co/400x600")" class="poster-img" alt="@item.TenPhim">
                             </div>
-                            <img src="@(item.HinhAnh ?? "https://placehold.co/400x600")"
-                                 class="poster-img"
-                                 alt="@item.TenPhim">
-                        </div>
-
-                        @* Phần thông tin phim *@
-                        <div class="movie-content px-1">
-                            <div class="movie-title fw-bold" title="@item.TenPhim">
-                                @item.TenPhim
-                            </div>
-                            <div class="movie-meta d-flex align-items-center mt-1">
-                                <span class="text-danger me-2"><i class="bi bi-clock-fill me-1"></i>@item.ThoiLuong'</span>
-                                <span class="text-muted">| @item.KhuVuc</span>
+                            <div class="movie-content px-1">
+                                <div class="movie-title fw-bold">@item.TenPhim</div>
+                                <div class="movie-meta d-flex align-items-center mt-1">
+                                    <span class="text-danger me-2"><i class="bi bi-clock-fill me-1"></i>@item.ThoiLuong'</span>
+                                    <span class="text-muted">| @item.KhuVuc</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                }
+                else
+                {
+                    <a asp-area="" asp-controller="Phim" asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none movie-link">
+                        <div class="card movie-card h-100 border-0 bg-transparent">
+                            <div class="poster-wrapper">
+                                <div class="movie-badge">
+                                    <span class="badge rounded-pill shadow-sm">@item.LoaiPhim</span>
+                                </div>
+                                <img src="@(item.HinhAnh ?? "https://placehold.co/400x600")" class="poster-img" alt="@item.TenPhim">
+                            </div>
+                            <div class="movie-content px-1">
+                                <div class="movie-title fw-bold">@item.TenPhim</div>
+                                <div class="movie-meta d-flex align-items-center mt-1">
+                                    <span class="text-danger me-2"><i class="bi bi-clock-fill me-1"></i>@item.ThoiLuong'</span>
+                                    <span class="text-muted">| @item.KhuVuc</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                }
             </div>
         }
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // CHIẾN THUẬT: "GIỮ CHÂN" THANH CUỘN
+
+        // 1. Chặn trình duyệt tự động nhảy lên đầu trang khi nhấn Back
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+
+        // 2. Lưu vị trí ngay khoảnh khắc click vào phim
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('.movie-link');
+            if (link) {
+                sessionStorage.setItem('lastScrollPos', window.scrollY);
+            }
+        });
+
+        // 3. THỰC HIỆN CUỘN NGAY LẬP TỨC (Inline Execution)
+        // Code này chạy ngay khi script được tải, giúp trang "nhảy" đến đúng chỗ trước khi render ảnh
+        (function() {
+            const savedPos = sessionStorage.getItem('lastScrollPos');
+            if (savedPos) {
+                window.scrollTo(0, parseInt(savedPos));
+            }
+        })();
+
+        // 4. Bọc lót thêm lần nữa khi mọi thứ đã sẵn sàng
+        window.addEventListener('load', () => {
+            const savedPos = sessionStorage.getItem('lastScrollPos');
+            if (savedPos) {
+                window.scrollTo({
+                    top: parseInt(savedPos),
+                    behavior: 'instant' // Quan trọng: ép nó nhảy ngay lập tức, không dùng smooth
+                });
+            }
+        });
+    </script>
+}

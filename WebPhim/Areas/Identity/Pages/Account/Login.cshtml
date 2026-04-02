@@ -5,69 +5,63 @@
 }
 
 @section Styles {
-    @* Kết nối với file CSS đã fix của ông *@
     <link rel="stylesheet" href="~/css/login-register.css" asp-append-version="true" />
 }
 
-@* Sử dụng auth-container để căn giữa toàn bộ trang *@
 <div class="auth-container">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-5 col-lg-4">
+            <div class="col-md-6 col-lg-5 col-xl-4">
+                @* Nới rộng một chút để input thoáng hơn *@
 
-                @* Card Đăng Nhập - Đã bỏ border-0 để dùng border-radius từ CSS *@
                 <div class="card auth-card shadow-lg">
-
-                    @* HEADER: Đã xóa sạch dấu mũi tên thô và thay bằng icon user-circle *@
+                    @* HEADER: Giữ nguyên phong cách sang trọng của CinemaVP *@
                     <div class="card-header auth-header-dark">
                         <h3 class="fw-bold my-1 d-flex align-items-center justify-content-center">
-                            <i class="fas fa-user-circle nav-auth-icon"></i>ĐĂNG NHẬP
+                            <i class="fas fa-user-circle nav-auth-icon me-2"></i>ĐĂNG NHẬP
                         </h3>
                         <p class="mb-0 small opacity-75">Chào mừng bạn quay trở lại với CinemaVP!</p>
                     </div>
 
-                    <div class="card-body auth-body p-4">
+                    <div class="card-body auth-body">
                         <form id="account" method="post">
-                            @* Thông báo lỗi hệ thống *@
                             <div asp-validation-summary="ModelOnly" class="text-danger mb-3 small" role="alert"></div>
 
-                            @* Input Email với hiệu ứng Floating Labels *@
+                            @* FIX CHÍNH: Cấu trúc Floating Label chuẩn để không bị đè chữ *@
                             <div class="form-floating mb-3">
                                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                                <label asp-for="Input.Email">Địa chỉ Email</label>
-                                <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                                <label asp-for="Input.Email" class="text-muted">Địa chỉ Email</label>
+                                <span asp-validation-for="Input.Email" class="field-validation-error"></span>
                             </div>
 
-                            @* Input Mật khẩu *@
                             <div class="form-floating mb-3">
                                 <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                                <label asp-for="Input.Password">Mật khẩu</label>
-                                <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                                <label asp-for="Input.Password" class="text-muted">Mật khẩu</label>
+                                <span asp-validation-for="Input.Password" class="field-validation-error"></span>
                             </div>
 
-                            @* Ghi nhớ đăng nhập & Quên mật khẩu *@
+                            @* Ghi nhớ & Quên mật khẩu *@
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <div class="form-check">
-                                    <input class="form-check-input shadow-none" asp-for="Input.RememberMe" />
-                                    <label class="form-check-label small text-muted cursor-pointer" asp-for="Input.RememberMe">
+                                    <input class="form-check-input" asp-for="Input.RememberMe" style="cursor:pointer" />
+                                    <label class="form-check-label small text-muted" asp-for="Input.RememberMe" style="cursor:pointer">
                                         Ghi nhớ tôi
                                     </label>
                                 </div>
-                                <a id="forgot-password" asp-page="./ForgotPassword" class="small text-decoration-none text-danger fw-bold">Quên mật khẩu?</a>
+                                <a id="forgot-password" asp-page="./ForgotPassword" class="small text-decoration-none text-danger fw-bold hover-underline">Quên mật khẩu?</a>
                             </div>
 
-                            @* Nút Xác nhận - Sử dụng style .btn-auth đỏ thương hiệu *@
-                            <button id="login-submit" type="submit" class="btn btn-auth w-100 shadow-sm py-2">
+                            @* Nút Xác nhận *@
+                            <button id="login-submit" type="submit" class="btn-auth">
                                 Xác nhận Đăng nhập
                             </button>
 
-                            @* Đường kẻ ngăn cách *@
                             <hr class="my-4 opacity-25">
 
-                            @* Link Đăng ký tài khoản mới *@
+                            @* Link Đăng ký *@
                             <div class="text-center">
                                 <p class="small text-muted mb-1">Bạn chưa có tài khoản?</p>
-                                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none fw-bold text-dark">
+                                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none fw-bold text-dark auth-link-hover">
                                     <i class="fas fa-user-plus me-1 small"></i>Đăng ký thành viên mới
                                 </a>
                             </div>
@@ -75,9 +69,9 @@
                     </div>
                 </div>
 
-                @* Link quay về trang chủ (nằm ngoài card) *@
+                @* Quay về trang chủ *@
                 <div class="text-center mt-4">
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="text-muted small text-decoration-none">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="text-muted small text-decoration-none opacity-75 hover-opacity-100">
                         <i class="fas fa-arrow-left me-1"></i> Quay về trang chủ
                     </a>
                 </div>
@@ -87,6 +81,5 @@
 </div>
 
 @section Scripts {
-    @* Script kiểm tra lỗi client-side *@
     <partial name="_ValidationScriptsPartial" />
 }

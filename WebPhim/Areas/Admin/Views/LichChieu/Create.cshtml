@@ -1,5 +1,9 @@
 ﻿@model WebPhim.Models.LichChieu
 
+@{
+    ViewData["Title"] = "Tạo Suất Chiếu";
+}
+
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -8,27 +12,35 @@
                     <h4 class="mb-0 fw-bold text-center">TẠO SUẤT CHIẾU MỚI</h4>
                 </div>
                 <div class="card-body p-4">
-                    <form asp-action="Create">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
                         <div class="mb-3">
                             <label class="form-label fw-bold">Chọn Phim</label>
-                            <select asp-for="PhimId" class="form-select" asp-items="ViewBag.PhimId"></select>
+                            <select asp-for="PhimId" class="form-select" asp-items="ViewBag.PhimId">
+                                <option value="">-- Chọn phim --</option>
+                            </select>
+                            <span asp-validation-for="PhimId" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-bold">Chọn Phòng & Rạp</label>
-                            <select asp-for="PhongId" class="form-select" asp-items="ViewBag.PhongId"></select>
+                            <select asp-for="PhongId" class="form-select" asp-items="ViewBag.PhongId">
+                                <option value="">-- Chọn phòng --</option>
+                            </select>
+                            <span asp-validation-for="PhongId" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-bold">Thời Gian Chiếu</label>
                             <input asp-for="ThoiGianChieu" type="datetime-local" class="form-control" />
-                            <span asp-validation-for="ThoiGianChieu" class="text-danger"></span>
+                            <span asp-validation-for="ThoiGianChieu" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label fw-bold">Giá Vé (VNĐ)</label>
                             <input asp-for="GiaVe" type="number" class="form-control" placeholder="Ví dụ: 75000" />
-                            <span asp-validation-for="GiaVe" class="text-danger"></span>
+                            <span asp-validation-for="GiaVe" class="text-danger small"></span>
                         </div>
 
                         <div class="d-grid gap-2">
@@ -41,3 +53,9 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

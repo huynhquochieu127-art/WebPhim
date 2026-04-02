@@ -1,0 +1,88 @@
+﻿/* ============================================================
+   STYLE CHI TIẾT PHIM - DÀNH RIÊNG CHO ADMIN (TỐI ƯU)
+   ============================================================ */
+
+/* 1. KHÓA CỨNG: Truy sát và ẩn mọi nút đặt vé/link booking từ trang User */
+#admin-detail-wrapper .btn-danger:not(.badge),
+#admin-detail-wrapper a[href*="DatVe"],
+#admin-detail-wrapper a[href*="ChonGhe"],
+#admin-detail-wrapper a[href^="#suat-chieu-section"],
+#admin-detail-wrapper .poster-card .btn {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* 2. Cấu trúc khung chứa Poster Admin */
+.admin-poster-area {
+    margin-bottom: 20px;
+}
+
+.admin-img-frame {
+    position: relative;
+    border: 2px solid #eee !important;
+    background-color: #1a1a1a !important; /* Nền tối để nổi bật poster */
+    transition: transform 0.3s ease;
+}
+
+.admin-poster-img {
+    width: 100%;
+    height: 480px !important;
+    object-fit: cover; /* Hoặc dùng contain nếu ông muốn hiện trọn vẹn ảnh */
+    display: block;
+}
+
+/* 3. Tùy chỉnh thông tin phim (Cột phải) */
+.fw-800 {
+    font-weight: 800;
+}
+
+.admin-info-box {
+    background: #f8f9fa;
+    border-left: 5px solid #0d6efd; /* Thanh màu xanh đặc trưng của Admin */
+    padding: 1.5rem;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+}
+
+/* 4. Giữ nguyên Badge thể loại (Né lệnh ẩn ở mục 1) */
+#admin-detail-wrapper .badge.bg-danger {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    font-weight: 600;
+}
+
+/* 5. Style cho danh sách suất chiếu của Admin */
+.admin-slot-item {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6 !important;
+    transition: all 0.2s ease-in-out;
+}
+
+    .admin-slot-item:hover {
+        border-color: #0d6efd !important;
+        box-shadow: 0 5px 15px rgba(13, 110, 253, 0.1);
+        transform: translateY(-3px);
+    }
+
+    .admin-slot-item .fs-2 {
+        color: #212529;
+        letter-spacing: -1px;
+    }
+
+    /* 6. Tùy chỉnh nút Sửa/Xóa trong mỗi suất chiếu */
+    .admin-slot-item .btn-link {
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0;
+    }
+
+        .admin-slot-item .btn-link:hover {
+            text-decoration: underline !important;
+        }
+
+/* 7. Đường kẻ nét đứt cho trạng thái trống */
+.border-dashed {
+    border: 2px dashed #ccc !important;
+}

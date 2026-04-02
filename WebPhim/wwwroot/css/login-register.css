@@ -1,65 +1,97 @@
 ﻿/* ============================================================
-   DESIGN LOGIN-REGISTER - PHIÊN BẢN CINEMAVP LUXURY (FIXED)
+   DESIGN LOGIN-REGISTER - PHIÊN BẢN CINEMAVP LUXURY (OPTIMIZED)
    ============================================================ */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
 body {
-    background-color: #f8f9fa;
+    background-color: #f4f7f6;
     font-family: 'Inter', sans-serif;
+    margin: 0;
 }
 
-/* --- 1. CONTAINER BỌC NGOÀI (Bổ sung để căn giữa trang) --- */
+/* --- 1. CONTAINER BỌC NGOÀI --- */
 .auth-container {
-    min-height: 80vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px 15px;
+    padding: 20px;
+    background: radial-gradient(circle at top right, #ffffff, #e9ecef);
 }
 
-/* --- 2. AUTH CARD (Fix: Thêm maxWidth để không bị tràn màn hình) --- */
+/* --- 2. AUTH CARD --- */
 .auth-card {
     width: 100%;
-    max-width: 450px; /* Độ rộng chuẩn cho trang Login */
-    border-radius: 20px !important;
+    max-width: 420px;
+    border-radius: 24px !important;
     overflow: hidden;
     border: none !important;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
-    transition: all 0.3s ease;
-    background: #fff;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+    background: #ffffff;
+    animation: fadeInAuth 0.5s ease-out;
+}
+
+@keyframes fadeInAuth {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .auth-header-dark {
-    background: linear-gradient(135deg, #212529 0%, #343a40 100%) !important;
+    background: linear-gradient(135deg, #1a1a1a 0%, #343a40 100%) !important;
     color: white !important;
-    padding: 35px 20px !important;
+    padding: 40px 20px !important;
     text-align: center;
 }
 
-.auth-header-primary {
-    background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%) !important;
-    color: white !important;
-    padding: 35px 20px !important;
-    text-align: center;
-}
-
-/* --- 3. INPUT & BUTTONS (Fix: Tránh bị dính chữ vào viền) --- */
+/* --- 3. INPUT & FLOATING LABELS (FIX LỖI ĐÈ CHỮ) --- */
 .auth-body {
-    padding: 40px !important;
+    padding: 30px 40px 45px 40px !important;
 }
 
-.form-control {
-    border-radius: 12px !important;
-    padding: 0.8rem 1.2rem !important;
-    border: 1px solid #dee2e6 !important;
-    box-shadow: none !important; /* Tắt shadow mặc định của BS */
-    transition: all 0.3s ease;
+.form-floating {
+    margin-bottom: 1rem;
 }
 
-    .form-control:focus {
-        border-color: #dc3545 !important;
-        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.1) !important;
+    /* Fix khoảng cách nội dung bên trong input */
+    .form-floating > .form-control {
+        border-radius: 12px !important;
+        padding: 1.625rem 0.75rem 0.625rem 0.75rem !important;
+        border: 1.5px solid #e9ecef !important;
+        background-color: #f8f9fa !important;
+        line-height: 1.5 !important; /* Tăng để chữ không sát nhau */
+        height: calc(3.5rem + 2px) !important;
+        transition: all 0.25s ease-in-out;
     }
 
+    /* Fix vị trí label khi bay lên */
+    .form-floating > label {
+        padding: 1rem 0.75rem !important;
+        color: #adb5bd !important;
+        font-size: 0.9rem;
+    }
+
+.form-control:focus {
+    background-color: #fff !important;
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1) !important;
+    outline: none;
+}
+
+/* Fix Autofill cho trình duyệt */
+.form-control:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #f8f9fa inset !important;
+    -webkit-text-fill-color: #212529 !important;
+}
+
+/* --- 4. NÚT XÁC NHẬN TRONG TRANG --- */
 .btn-auth {
     background: #dc3545 !important;
     color: white !important;
@@ -67,50 +99,83 @@ body {
     border-radius: 12px !important;
     padding: 14px !important;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.2px;
     border: none !important;
-    width: 100%; /* Luôn dài hết Card */
+    width: 100%;
     margin-top: 10px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
     .btn-auth:hover {
-        background: #b02a37 !important;
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3) !important;
+        background: #c82333 !important;
+        transform: scale(1.02);
+        box-shadow: 0 10px 20px rgba(220, 53, 69, 0.2) !important;
     }
 
-/* --- 4. NAVBAR AUTH (Fix: Căn giữa icon và chữ) --- */
+/* --- 5. NAVBAR AUTH (FIX LỖI DÍNH ICON & GẠCH CHÂN) --- */
 .btn-login-nav {
     color: #333 !important;
     font-weight: 600;
-    padding: 8px 20px !important;
+    padding: 8px 16px !important;
     display: inline-flex;
     align-items: center;
-    transition: all 0.3s ease;
-    text-decoration: none !important;
+    text-decoration: none !important; /* Bỏ gạch chân */
+    border-radius: 50px;
+    transition: all 0.2s;
 }
+
+    .btn-login-nav:hover {
+        color: #dc3545 !important;
+        background-color: rgba(0,0,0,0.03);
+    }
 
 .btn-register-nav {
     background-color: #dc3545 !important;
     color: white !important;
     font-weight: 600;
-    padding: 10px 25px !important;
+    padding: 8px 22px !important;
     border-radius: 50px !important;
     display: inline-flex;
     align-items: center;
-    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2) !important;
-    text-decoration: none !important;
+    text-decoration: none !important; /* Bỏ gạch chân */
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15) !important;
+    transition: all 0.3s ease;
 }
 
-/* --- 5. TIỆN ÍCH (Fix: Khoảng cách Icon) --- */
+    .btn-register-nav:hover {
+        background-color: #b02a37 !important;
+        color: white !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(220, 53, 69, 0.25) !important;
+    }
+
+/* Căn chỉnh Icon cho Navbar */
 .nav-auth-icon {
     font-size: 1.1rem;
-    margin-right: 10px; /* Tăng khoảng cách một chút */
+    margin-right: 8px !important; /* Ép khoảng cách icon và chữ */
 }
 
-/* Fix lỗi hiển thị validation message của ASP.NET */
-.text-danger.small {
-    font-size: 0.85rem;
-    margin-top: 5px;
+/* --- 6. VALIDATION & RESPONSIVE --- */
+.field-validation-error {
+    color: #dc3545;
+    font-size: 0.8rem;
+    margin-top: 6px;
     display: block;
+    font-weight: 500;
+}
+
+@media (max-width: 480px) {
+    .auth-body {
+        padding: 25px 20px !important;
+    }
+
+    .auth-card {
+        border-radius: 0 !important;
+        min-height: 100vh;
+        max-width: 100%;
+    }
+
+    .auth-container {
+        padding: 0;
+    }
 }

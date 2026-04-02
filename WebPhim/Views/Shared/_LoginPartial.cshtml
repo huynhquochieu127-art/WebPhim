@@ -3,35 +3,40 @@
 @inject SignInManager<NguoiDung> SignInManager
 @inject UserManager<NguoiDung> UserManager
 
-<ul class="navbar-nav ms-auto">
+<ul class="navbar-nav ms-auto align-items-center auth-nav-group">
     @if (SignInManager.IsSignedIn(User))
     {
         var user = await UserManager.GetUserAsync(User);
+        @* Hiển thị Họ Tên (nếu có) hoặc UserName *@
         var displayAlias = user?.HoTen ?? UserManager.GetUserName(User);
 
         <li class="nav-item">
-            <a class="nav-link btn-login-nav" asp-area="Identity" asp-page="/Account/Manage/Index">
-                <i class="fas fa-user-circle nav-auth-icon"></i>Chào, @displayAlias!
+            <a class="nav-link user-profile-link px-3" asp-area="Identity" asp-page="/Account/Manage/Index" title="Quản lý tài khoản">
+                <i class="fas fa-user-circle me-2 text-danger"></i>
+                <span class="d-none d-sm-inline fw-600">Chào, @displayAlias!</span>
             </a>
         </li>
         <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" class="nav-link btn-logout-nav">
-                    <i class="fas fa-sign-out-alt nav-auth-icon"></i>Thoát
+            <form class="d-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                <button type="submit" class="btn-logout-nav ms-2">
+                    <i class="fas fa-power-off me-1"></i>Thoát
                 </button>
             </form>
         </li>
     }
     else
     {
+        @* Trạng thái chưa đăng nhập - Sử dụng class Luxury đã fix *@
         <li class="nav-item">
-            <a class="nav-link btn-login-nav" asp-area="Identity" asp-page="/Account/Login">
-                <i class="fas fa-sign-in-alt nav-auth-icon"></i>Đăng nhập
+            <a class="btn-login-nav" asp-area="Identity" asp-page="/Account/Login">
+                <i class="fas fa-sign-in-alt nav-auth-icon"></i>
+                <span>Đăng nhập</span>
             </a>
         </li>
         <li class="nav-item ms-lg-2">
-            <a class="nav-link btn-register-nav" asp-area="Identity" asp-page="/Account/Register">
-                <i class="fas fa-user-plus nav-auth-icon"></i>Đăng ký
+            <a class="btn-register-nav shadow-sm" asp-area="Identity" asp-page="/Account/Register">
+                <i class="fas fa-user-plus nav-auth-icon"></i>
+                <span>Đăng ký</span>
             </a>
         </li>
     }
