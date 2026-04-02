@@ -12,7 +12,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 // 2. Đăng ký DbContext
 builder.Services.AddDbContext<DatVeDbContext>(options =>
     options.UseSqlServer(connectionString));
-
+//123
 // 3. Cấu hình Identity
 builder.Services.AddDefaultIdentity<NguoiDung>(options => {
     options.SignIn.RequireConfirmedAccount = false;
