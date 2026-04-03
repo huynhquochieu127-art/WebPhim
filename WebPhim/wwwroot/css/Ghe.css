@@ -1,89 +1,130 @@
 ﻿/* ============================================================
-   STYLE CHỌN GHẾ - ĐÃ FIX CHIA HÀNG (ROW-BASED)
+   STYLE CHỌN GHẾ - LUXURY EDITION (FIXED FOR CHONGHE)
    ============================================================ */
 
 .cinema-screen {
     width: 80%;
     margin: 0 auto 50px auto;
-    background: #6c757d;
-    color: white;
+    background: #343a40; /* Đổi sang màu tối cho sang trọng hơn */
+    color: #adb5bd;
     text-align: center;
-    padding: 10px 0;
+    padding: 12px 0;
     border-radius: 0 0 100px 100px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: bold;
-    letter-spacing: 8px;
-    box-shadow: 0 15px 25px -5px rgba(0,0,0,0.1);
+    letter-spacing: 10px;
+    box-shadow: 0 20px 30px -10px rgba(0,0,0,0.2);
+    border-bottom: 4px solid #495057;
 }
 
-/* Khung bao quát: Xếp các hàng ghế từ trên xuống dưới */
+/* Khung bao quát */
 .seat-container {
     width: 100%;
-    max-width: 850px;
+    max-width: 900px;
     margin: 0 auto;
     display: flex;
-    flex-direction: column; /* Xếp hàng A, rồi đến hàng B... */
-    gap: 15px; /* Khoảng cách giữa các hàng */
+    flex-direction: column;
+    gap: 12px;
 }
 
-/* Style cho từng hàng ghế cụ thể */
+/* Style cho từng hàng ghế */
 .seat-row {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px; /* Khoảng cách giữa các ghế trong cùng 1 hàng */
+    gap: 12px;
 }
 
-/* Nhãn chữ cái ở đầu và cuối hàng (A, B, C...) */
+/* Nhãn chữ cái hàng ghế */
 .row-label {
-    width: 30px;
+    width: 35px;
     font-weight: bold;
-    color: #adb5bd;
-    font-size: 0.9rem;
+    color: #ced4da;
+    font-size: 0.85rem;
     text-align: center;
 }
 
-/* Ô ghế */
+/* Ô ghế cơ bản (Hàng B, C) */
 .seat-item {
-    width: 45px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     background-color: #ffffff;
-    border: 2px solid #dee2e6;
-    transition: all 0.2s ease;
+    border: 1px solid #dee2e6;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 0.75rem;
     font-weight: 600;
     color: #495057;
-    flex-shrink: 0; /* Không cho ghế bị bóp méo */
+    flex-shrink: 0;
 }
 
-    .seat-item:hover:not(.occupied) {
-        transform: translateY(-3px) scale(1.1);
+    /* Hiệu ứng Hover chung */
+    .seat-item:hover:not(.occupied):not(.selected) {
+        transform: translateY(-4px);
         border-color: #0d6efd;
         color: #0d6efd;
-        box-shadow: 0 5px 10px rgba(13, 110, 253, 0.15);
+        box-shadow: 0 8px 15px rgba(13, 110, 253, 0.15);
+        background-color: #f8f9ff;
     }
 
-    /* TRẠNG THÁI */
+    /* --- PHÂN LOẠI TRẠNG THÁI --- */
+
+    /* 1. Ghế Tiết kiệm (Hàng A) */
+    .seat-item.seat-cheap {
+        background-color: #f1f3f5;
+        border-color: #e9ecef;
+        color: #adb5bd;
+    }
+
+        .seat-item.seat-cheap:hover:not(.occupied):not(.selected) {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+        }
+
+    /* 2. Ghế VIP (Hàng D, E hoặc loại VIP) */
     .seat-item.seat-vip {
-        background-color: #fff1f0;
-        border-color: #ff4d4f;
-        color: #ff4d4f;
+        background-color: #fffaf0; /* Màu kem nhẹ */
+        border: 2px solid #ffc107; /* Viền vàng Luxury */
+        color: #856404;
     }
 
+        .seat-item.seat-vip:hover:not(.occupied):not(.selected) {
+            background-color: #fff3cd;
+            border-color: #ffc107;
+            box-shadow: 0 8px 15px rgba(255, 193, 7, 0.2);
+        }
+
+    /* 3. Ghế đang được người dùng chọn */
     .seat-item.selected {
         background-color: #0d6efd !important;
         border-color: #0d6efd !important;
         color: white !important;
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(13, 110, 253, 0.4) !important;
     }
 
+    /* 4. Ghế đã có người mua */
     .seat-item.occupied {
         background-color: #e9ecef !important;
         border-color: #dee2e6 !important;
-        color: #adb5bd !important;
+        color: #dee2e6 !important;
         cursor: not-allowed;
+        pointer-events: none; /* Không cho click */
     }
+
+/* Responsive cho màn hình nhỏ */
+@media (max-width: 576px) {
+    .seat-item {
+        width: 30px;
+        height: 30px;
+        font-size: 0.6rem;
+    }
+
+    .seat-row {
+        gap: 5px;
+    }
+}

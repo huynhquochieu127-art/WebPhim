@@ -4,72 +4,77 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<div class="container-fluid py-4">
+@section Styles {
+    @* Kích hoạt bộ nhận diện Luxury cho trang Admin từ file CSS riêng của ông *@
+    <link rel="stylesheet" href="~/css/MovieDetail_Admin.css" />
+}
+
+<div class="container-fluid py-4" id="admin-detail-wrapper">
+    @* --- THANH ĐIỀU HƯỚNG --- *@
     <div class="d-flex align-items-center mb-4">
-        <<a href="javascript:void(0);" onclick="history.back();" class="btn btn-outline-secondary btn-sm rounded-pill me-3">
+        <a href="javascript:void(0);" onclick="history.back();" class="btn btn-outline-secondary btn-sm rounded-pill me-3 shadow-sm">
             <i class="fas fa-arrow-left"></i> Quay lại
         </a>
-        <h2 class="h3 mb-0 fw-bold text-dark">Chi tiết phim hệ thống</h2>
+        <h2 class="h4 mb-0 fw-bold text-dark">Chi tiết phim hệ thống</h2>
     </div>
 
-    <div class="row">
+    <div class="row g-4">
+        @* --- CỘT TRÁI: POSTER LUXURY --- *@
         <div class="col-xl-4 col-lg-5">
-            <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
-                <div class="position-relative">
-                    <img src="@Model.HinhAnh" class="w-100 d-block" style="object-fit: cover; height: 500px;"
+            <div class="admin-poster-container mx-auto">
+                <div class="admin-img-frame shadow-lg">
+                    @* Poster bo góc 20px và có hiệu ứng hover nhấc lên *@
+                    <img src="@Model.HinhAnh" class="admin-poster-img"
                          onerror="this.src='https://placehold.co/500x750?text=No+Poster'">
-                    <div class="position-absolute top-0 end-0 m-3">
-                        <span class="badge bg-danger shadow-sm px-3 py-2">@Model.LoaiPhim</span>
-                    </div>
+
+                    @* Nhãn loại phim đè lên góc phải poster *@
+                    <span class="admin-badge-on-poster">@Model.LoaiPhim</span>
                 </div>
-                <div class="card-body bg-light text-center border-top">
-                    <p class="text-muted small mb-1">Mã định danh phim (ID)</p>
-                    <h5 class="fw-bold text-primary">#@Model.Id</h5>
+
+                @* Mã ID phim nằm trong hộp bo tròn bên dưới poster *@
+                <div class="admin-id-box shadow-sm mt-3">
+                    <span class="admin-id-label">Mã định danh phim (ID)</span>
+                    <span class="admin-id-value">#@Model.Id</span>
                 </div>
             </div>
         </div>
 
+        @* --- CỘT PHẢI: NỘI DUNG CHI TIẾT --- *@
         <div class="col-xl-8 col-lg-7">
-            <div class="card shadow-sm border-0 rounded-4">
+            <div class="card shadow-sm border-0 admin-info-card">
                 <div class="card-body p-4">
+                    @* Tiêu đề và Nút chỉnh sửa màu vàng đặc trưng Admin *@
                     <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            <h1 class="display-6 fw-bold text-dark mb-2">@Model.TenPhim</h1>
-                            <div class="d-flex gap-3 text-muted">
-                                <span><i class="far fa-clock me-1 text-primary"></i> @Model.ThoiLuong phút</span>
-                                <span><i class="fas fa-user-tie me-1 text-primary"></i> Đạo diễn: @Model.DaoDien</span>
-                            </div>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <a asp-area="Admin" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning rounded-pill px-4 shadow-sm">
-                                <i class="fas fa-edit me-1"></i> Chỉnh sửa
-                            </a>
-                        </div>
+                        <h1 class="display-6 fw-bold text-dark mb-0">@Model.TenPhim</h1>
+                        <a asp-area="Admin" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning admin-btn-edit px-4 shadow-sm fw-bold rounded-pill">
+                            <i class="fas fa-edit me-1"></i> Chỉnh sửa
+                        </a>
+                    </div>
+
+                    @* Nhóm thông tin phụ: Thời lượng, Đạo diễn và KHU VỰC *@
+                    <div class="d-flex flex-wrap gap-2 text-muted mb-4">
+                        <span class="me-3"><i class="far fa-clock me-1 text-primary"></i> @Model.ThoiLuong phút</span>
+                        <span class="me-3"><i class="fas fa-user-tie me-1 text-primary"></i> @Model.DaoDien</span>
+
+                        @* HIỂN THỊ KHU VỰC (Đã sửa tên biến cho khớp với bản Lab trước của ông) *@
+                        <span class="badge badge-subtle bg-info-subtle">
+                            <i class="fas fa-globe me-1"></i> @Model.KhuVuc
+                        </span>
+
+                        
                     </div>
 
                     <hr class="my-4" style="opacity: 0.1;">
 
+                    @* Phần mô tả phim có thanh đỏ lề trái chuẩn style User *@
                     <div class="mb-4">
-                        <h5 class="fw-bold text-dark mb-3"><i class="fas fa-align-left me-2 text-primary"></i>Nội dung phim</h5>
-                        <div class="p-3 rounded-3 bg-light border">
-                            <p class="text-secondary mb-0" style="line-height: 1.6; text-align: justify;">
-                                @(string.IsNullOrEmpty(Model.MoTa) ? "Chưa có mô tả cho phim này." : Model.MoTa)
+                        <h5 class="fw-bold text-dark mb-3">
+                            <i class="fas fa-align-left me-2 text-primary"></i>Nội dung phim
+                        </h5>
+                        <div class="admin-info-box">
+                            <p class="text-secondary mb-0" style="line-height: 1.7; text-align: justify;">
+                                @(string.IsNullOrEmpty(Model.MoTa) ? "Dữ liệu mô tả hiện đang trống." : Model.MoTa)
                             </p>
-                        </div>
-                    </div>
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-sm-6">
-                            <div class="p-3 border rounded-3 bg-white">
-                                <span class="text-muted small d-block mb-1">Trạng thái</span>
-                                <span class="fw-bold text-success"><i class="fas fa-check-circle me-1"></i> Đang khả dụng</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="p-3 border rounded-3 bg-white">
-                                <span class="text-muted small d-block mb-1">Khu vực hiển thị</span>
-                                <span class="fw-bold text-info"><i class="fas fa-globe me-1"></i> Toàn hệ thống</span>
-                            </div>
                         </div>
                     </div>
                 </div>

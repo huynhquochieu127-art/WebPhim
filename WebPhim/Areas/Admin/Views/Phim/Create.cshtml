@@ -4,116 +4,124 @@
     ViewData["Title"] = "Thêm Phim Mới - Quản trị";
 }
 
-@* Sử dụng class admin-card-container từ Layout.css để tự động đẩy Footer xuống *@
-<div class="container py-4 admin-card-container">
-    <div class="card shadow-sm border-0 overflow-hidden">
+@* Sử dụng lại file CSS của trang Edit để đồng bộ giao diện 2 cột *@
+<link rel="stylesheet" href="~/css/EditPhim.css" />
 
-        @* Header đồng bộ với hệ thống *@
-        <div class="card-header bg-primary text-white py-3">
+<div class="container py-4">
+    <div class="edit-movie-container">
+
+        @* Header màu xanh Primary cho trang Thêm mới *@
+        <div class="edit-header shadow-sm bg-primary text-white">
             <h5 class="mb-0 fw-bold">
                 <i class="fas fa-plus-circle me-2"></i>THÊM PHIM MỚI VÀO HỆ THỐNG
             </h5>
         </div>
 
-        <div class="card-body p-4 p-lg-5">
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none"></div>
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            @* Thêm class 'align-items-start' trực tiếp để hỗ trợ sticky *@
+            <div class="edit-row d-flex align-items-start">
 
-            <form asp-action="Create" method="post" enctype="multipart/form-data">
-                <div class="row g-4">
+                @* --- CỘT TRÁI: NHẬP LIỆU (Chiếm 8 phần) --- *@
+                <div class="edit-form-side flex-grow-1" style="flex: 0 0 65%;">
 
-                    @* --- CỘT TRÁI: NHẬP LIỆU --- *@
-                    <div class="col-lg-8">
-                        <div class="mb-3">
-                            <label asp-for="TenPhim" class="form-label fw-bold"><i class="fas fa-heading me-1 text-primary"></i>Tên Phim</label>
-                            <input asp-for="TenPhim" class="form-control form-control-lg border-2" placeholder="Nhập tên phim..." />
-                            <span asp-validation-for="TenPhim" class="text-danger small"></span>
-                        </div>
+                    <div class="form-group-custom">
+                        <label asp-for="TenPhim"><i class="fas fa-heading me-1 text-primary"></i>Tên Phim</label>
+                        <input asp-for="TenPhim" class="form-control-custom w-100 fw-bold" placeholder="Nhập tên phim..." />
+                        <span asp-validation-for="TenPhim" class="text-danger small"></span>
+                    </div>
 
-                        <div class="mb-3">
-                            <label asp-for="MoTa" class="form-label fw-bold"><i class="fas fa-align-left me-1 text-primary"></i>Mô Tả Nội Dung</label>
-                            <textarea asp-for="MoTa" class="form-control border-2" rows="5" placeholder="Tóm tắt ngắn gọn nội dung phim..."></textarea>
-                            <span asp-validation-for="MoTa" class="text-danger small"></span>
-                        </div>
+                    <div class="form-group-custom">
+                        <label asp-for="MoTa"><i class="fas fa-align-left me-1 text-primary"></i>Mô Tả Nội Dung</label>
+                        <textarea asp-for="MoTa" class="form-control-custom w-100" rows="5" placeholder="Tóm tắt ngắn gọn nội dung phim..."></textarea>
+                        <span asp-validation-for="MoTa" class="text-danger small"></span>
+                    </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="LoaiPhim" class="form-label fw-bold"><i class="fas fa-tags me-1 text-primary"></i>Thể Loại</label>
-                                <input asp-for="LoaiPhim" class="form-control border-2" placeholder="Hành động, Hài..." />
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-group-custom">
+                                <label asp-for="LoaiPhim"><i class="fas fa-tags me-1 text-primary"></i>Thể Loại</label>
+                                <input asp-for="LoaiPhim" class="form-control-custom w-100" placeholder="Hành động, Hài..." />
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="ThoiLuong" class="form-label fw-bold"><i class="fas fa-clock me-1 text-primary"></i>Thời Lượng</label>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group-custom">
+                                <label asp-for="ThoiLuong"><i class="fas fa-clock me-1 text-primary"></i>Thời Lượng</label>
                                 <div class="input-group">
-                                    <input asp-for="ThoiLuong" class="form-control border-2" type="number" />
-                                    <span class="input-group-text border-2 bg-light">phút</span>
+                                    <input asp-for="ThoiLuong" class="form-control-custom border-end-0 flex-grow-1" type="number" />
+                                    <span class="input-group-text bg-white border-start-0 text-muted" style="border-radius: 0 10px 10px 0; border: 1px solid #eee;">phút</span>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="DaoDien" class="form-label fw-bold"><i class="fas fa-user-tie me-1 text-primary"></i>Đạo Diễn</label>
-                                <input asp-for="DaoDien" class="form-control border-2" />
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-group-custom">
+                                <label asp-for="DaoDien"><i class="fas fa-user-tie me-1 text-primary"></i>Đạo Diễn</label>
+                                <input asp-for="DaoDien" class="form-control-custom w-100" />
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="KhuVuc" class="form-label fw-bold"><i class="fas fa-layer-group me-1 text-primary"></i>Khu Vực Hiển Thị</label>
-                                <select asp-for="KhuVuc" class="form-select border-2 shadow-none">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group-custom">
+                                <label asp-for="KhuVuc"><i class="fas fa-layer-group me-1 text-primary"></i>Khu Vực Hiển Thị</label>
+                                <select asp-for="KhuVuc" class="form-control-custom w-100 shadow-none">
                                     <option value="Phim Đang Chiếu">Phim Đang Chiếu</option>
                                     <option value="Phim Sắp Chiếu">Phim Sắp Chiếu</option>
                                     <option value="Phim Hot">Phim Hot Trending</option>
                                 </select>
                             </div>
                         </div>
-
-                        <div class="mb-3">
-                            <label asp-for="FileAnh" class="form-label fw-bold"><i class="fas fa-image me-1 text-primary"></i>Chọn Poster</label>
-                            <input asp-for="FileAnh" type="file" class="form-control border-2" id="imgInput" accept="image/*" />
-                            <div class="form-text">Khuyên dùng ảnh tỉ lệ 2:3 (Ví dụ: 600x900px)</div>
-                        </div>
                     </div>
 
-                    @* --- CỘT PHẢI: PREVIEW POSTER --- *@
-                    <div class="col-lg-4">
-                        <div class="sticky-top" style="top: 20px; z-index: 1;">
-                            <label class="fw-bold d-block mb-3 text-center text-muted">XEM TRƯỚC POSTER</label>
+                    <div class="form-group-custom mt-3">
+                        <label asp-for="FileAnh"><i class="fas fa-image me-1 text-primary"></i>Chọn Poster</label>
+                        <input asp-for="FileAnh" type="file" class="form-control-custom w-100" id="imgInput" accept="image/*" />
+                        <div class="form-text mt-2 text-muted italic">Khuyên dùng ảnh tỉ lệ 2:3 (Ví dụ: 600x900px)</div>
+                    </div>
 
-                            @* Sử dụng preview-box từ Layout.css *@
-                            <div class="preview-box shadow-sm mx-auto" style="max-width: 280px;">
-                                <img id="imgPreview"
-                                     src="https://placehold.co/400x600?text=Chưa+có+ảnh"
-                                     alt="Preview" />
-                            </div>
+                    @* Khối nút điều hướng *@
+                    <div class="mt-5 pt-3 border-top d-flex gap-2">
+                        <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow">
+                            <i class="fas fa-check-circle me-2"></i>LƯU PHIM MỚI
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4 rounded-pill d-flex align-items-center">
+                            <i class="fas fa-times me-2"></i>Quay lại
+                        </a>
+                    </div>
+                </div>
 
-                            <div class="alert alert-info mt-3 py-2 px-3 small shadow-sm border-0">
-                                <i class="fas fa-info-circle me-1"></i> Ảnh sẽ được tự động căn chỉnh theo tỉ lệ chuẩn rạp phim.
-                            </div>
+                @* --- CỘT PHẢI: PREVIEW (Chiếm 4 phần) --- *@
+                <div class="edit-poster-side" style="flex: 0 0 35%; padding-left: 30px;">
+                    @* Wrapper này sẽ giữ cho mọi thứ bên trong nó đứng yên *@
+                    <div class="sticky-wrapper">
+                        <p class="poster-label text-muted text-center fw-bold mb-3">XEM TRƯỚC POSTER</p>
+
+                        <div class="poster-edit-wrapper mx-auto shadow-lg">
+                            <img id="imgPreview"
+                                 src="https://placehold.co/400x600?text=Chưa+có+ảnh"
+                                 class="poster-edit-img" alt="Preview" />
+                        </div>
+
+                        @* Dòng thông báo này cũng sẽ đứng yên cùng poster *@
+                        <div class="alert alert-info mt-3 py-2 px-3 small shadow-sm border-0 text-center">
+                            <i class="fas fa-info-circle me-1"></i> Ảnh sẽ tự động căn chỉnh theo tỉ lệ chuẩn rạp phim.
                         </div>
                     </div>
                 </div>
 
-                @* Nút điều hướng (Luôn nằm dưới cùng và không bị đè) *@
-                <div class="form-section-divider text-center text-lg-end">
-                    <a asp-action="Index" class="btn btn-outline-secondary px-4 py-2 rounded-pill me-2">
-                        <i class="fas fa-times me-2"></i>Quay lại
-                    </a>
-                    <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow">
-                        <i class="fas fa-check-circle me-2"></i>LƯU PHIM MỚI
-                    </button>
-                </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        // Xử lý xem trước ảnh ngay khi chọn file
         document.getElementById('imgInput').onchange = function (evt) {
             const [file] = this.files;
             if (file) {
                 const preview = document.getElementById('imgPreview');
                 preview.src = URL.createObjectURL(file);
-                // Giải phóng bộ nhớ sau khi load xong
                 preview.onload = () => URL.revokeObjectURL(preview.src);
             }
         };

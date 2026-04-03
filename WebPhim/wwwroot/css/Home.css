@@ -54,7 +54,8 @@
 .poster-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    /* Sửa 'cover' thành 'contain' để thấy hết ảnh, hoặc 'fill' nếu ảnh ông đã chuẩn 2:3 */
+    object-fit: fill;
     transition: transform 0.8s cubic-bezier(0.2, 0, 0.2, 1);
     will-change: transform;
 }

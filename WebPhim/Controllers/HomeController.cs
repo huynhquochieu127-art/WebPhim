@@ -12,38 +12,45 @@ public class HomeController : Controller
         _context = context;
     }
 
-    public async Task<IActionResult> Index()
+    // ============================================================
+    // ACTION TRANG CHỦ - CẬP NHẬT TÌM KIẾM PHIM
+    // ============================================================
+    public async Task<IActionResult> Index(string searchString)
     {
-        // Lấy danh sách phim đang chiếu
-        var danhSachPhim = await _context.Phims
+        // 1. Khởi tạo truy vấn lấy phim đang chiếu
+        var query = _context.Phims
             .Where(p => p.KhuVuc == "Phim Đang Chiếu")
-            .AsNoTracking()
-            .ToListAsync();
+            .AsNoTracking();
+
+        // 2. Nếu có nhập từ khóa tìm kiếm (searchString)
+        if (!string.IsNullOrEmpty(searchString))
+        {
+            searchString = searchString.ToLower().Trim();
+
+            // Tìm theo tên phim HOẶC thể loại phim (Khớp với placeholder ở Header)
+            query = query.Where(p => p.TenPhim.ToLower().Contains(searchString)
+                                  || p.LoaiPhim.ToLower().Contains(searchString));
+
+            // Lưu lại từ khóa để hiển thị lại trên ô Input nếu cần
+            ViewData["CurrentFilter"] = searchString;
+        }
+
+        var danhSachPhim = await query.ToListAsync();
 
         return View(danhSachPhim ?? new List<Phim>());
     }
 
-    // ============================================================
-    // ACTION CHI TIẾT PHIM - FIX LỖI 404
-    // ============================================================
     public async Task<IActionResult> Details(int? id)
     {
-        if (id == null)
-        {
-            return NotFound();
-        }
+        if (id == null) return NotFound();
 
-        // Tìm phim theo Id, kèm theo danh sách Lịch Chiếu của phim đó
         var phim = await _context.Phims
-            .Include(p => p.LichChieus) // Load lịch chiếu
-            .ThenInclude(lc => lc.Phong) // Load thông tin phòng của lịch chiếu đó
-            .ThenInclude(ph => ph.Rap)   // Load thông tin rạp của phòng đó
+            .Include(p => p.LichChieus)
+            .ThenInclude(lc => lc.Phong)
+            .ThenInclude(ph => ph.Rap)
             .FirstOrDefaultAsync(m => m.Id == id);
 
-        if (phim == null)
-        {
-            return NotFound();
-        }
+        if (phim == null) return NotFound();
 
         return View(phim);
     }

@@ -1,0 +1,117 @@
+﻿/* --- BỐ CỤC CHÍNH TRANG EDIT --- */
+.edit-movie-container {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    padding: 40px;
+    margin-top: 20px;
+}
+
+/* Tiêu đề trang */
+.edit-header {
+    background: #0d6efd;
+    color: #fff;
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+}
+
+/* Chia 2 cột: Ép không cho nhảy hàng */
+.edit-row {
+    display: flex !important;
+    flex-wrap: nowrap !important; /* QUAN TRỌNG: Ngăn poster nhảy xuống dưới nút bấm */
+    gap: 40px;
+    align-items: flex-start !important; /* QUAN TRỌNG: Hỗ trợ sticky */
+}
+
+.edit-form-side {
+    flex: 1; /* Tự động giãn rộng phần nhập liệu */
+    min-width: 0;
+}
+
+.edit-poster-side {
+    width: 320px;
+    flex-shrink: 0; /* Ngăn cột poster bị bóp méo khi màn hình nhỏ */
+}
+
+/* --- ĐỊNH NGHĨA KHỐI ĐỨNG YÊN (Sticky) --- */
+.sticky-wrapper {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 20px; /* Poster sẽ dừng lại cách mép trên màn hình 20px */
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- TỐI ƯU FORM INPUT --- */
+.form-group-custom {
+    margin-bottom: 20px;
+}
+
+    .form-group-custom label {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+.form-control-custom {
+    border-radius: 10px;
+    border: 1px solid #eee;
+    padding: 12px 15px;
+    background: #fdfdfd;
+    transition: all 0.3s;
+    width: 100%;
+}
+
+    .form-control-custom:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+        background: #fff;
+        outline: none;
+    }
+
+/* --- TỐI ƯU POSTER PREVIEW --- */
+.poster-edit-wrapper {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    border: 5px solid #fff;
+    aspect-ratio: 2 / 3;
+    background: #f8f9fa;
+}
+
+.poster-edit-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.poster-label {
+    text-align: center;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    margin-bottom: 15px;
+}
+
+/* --- NÚT BẤM --- */
+.btn-save-edit {
+    background: #0d6efd;
+    color: #fff;
+    padding: 12px 40px;
+    border-radius: 50px;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+    transition: 0.3s;
+}

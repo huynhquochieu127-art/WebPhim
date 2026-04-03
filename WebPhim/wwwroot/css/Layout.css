@@ -62,3 +62,7 @@ footer {
     margin-top: 2rem;
     padding-top: 2rem;
 }
+/* Sửa từ #adminDropdown thành .no-caret để nó ăn khớp với file Layout */
+.no-caret::after {
+    display: none !important;
+}
