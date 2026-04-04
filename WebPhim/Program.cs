@@ -77,7 +77,7 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-// --- SEED DATA CHO ADMIN ---
+// --- SEED DATA CHO ADMIN ------
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
