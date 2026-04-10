@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<WebPhim.Models.Ghe>
 
 @section Styles {
-    @* Kết nối đúng với file CSS chọn ghế ông đã gửi *@
     <link rel="stylesheet" href="~/css/Ghe.css" asp-append-version="true" />
 }
 
@@ -37,31 +36,31 @@
         <div class="card-body p-5">
             @if (Model.Any())
             {
-                @* 2. Container bọc các hàng ghế - Sử dụng đúng class trong Ghe.css *@
                 <div class="seat-container">
                     @{
-                        // Nhóm ghế theo ký tự đầu (A, B, C...) để tạo hàng
-                        var groups = Model.OrderBy(g => g.SoGhe)
+                        // Sắp xếp theo ký tự đầu và độ dài để A1 -> A10 chuẩn bài
+                        var groups = Model
+                        .OrderBy(g => g.SoGhe.Substring(0, 1))
+                        .ThenBy(g => g.SoGhe.Length)
+                        .ThenBy(g => g.SoGhe)
                         .GroupBy(g => g.SoGhe.Substring(0, 1));
                     }
 
                     @foreach (var row in groups)
                     {
                         <div class="seat-row">
-                            @* Nhãn hàng bên trái *@
                             <div class="row-label">@row.Key</div>
 
                             @foreach (var item in row)
                             {
-                                @* Kiểm tra Logic VIP: hàng E hoặc LoaiGhe == "VIP" *@
-                                var isVipClass = (item.LoaiGhe == "VIP" || item.SoGhe.StartsWith("E")) ? "seat-vip" : "";
+                                @* FIX LOGIC: Cả hàng D và E hoặc những ghế có tag VIP đều hiện màu vàng *@
+                                var isVipClass = (item.LoaiGhe == "VIP" || row.Key == "D" || row.Key == "E") ? "seat-vip" : "";
 
-                                <div class="seat-item @isVipClass" title="Loại ghế: @item.LoaiGhe">
+                                <div class="seat-item @isVipClass" title="Loại ghế: @(string.IsNullOrEmpty(isVipClass) ? "Thường" : "VIP")">
                                     @item.SoGhe
                                 </div>
                             }
 
-                            @* Nhãn hàng bên phải cho cân đối *@
                             <div class="row-label">@row.Key</div>
                         </div>
                     }
@@ -77,16 +76,16 @@
             }
         </div>
 
-        @* 3. Chú thích các loại ghế *@
+        @* 3. Chú thích các loại ghế - ĐÃ BỎ CHỮ (HÀNG E) *@
         <div class="card-footer bg-light border-0 py-4 text-center">
-            <div class="d-flex justify-content-center gap-4">
+            <div class="d-flex justify-content-center gap-5">
                 <div class="d-flex align-items-center gap-2">
                     <div class="seat-item" style="width: 25px; height: 25px; cursor: default;"></div>
-                    <small class="fw-bold text-muted">Ghế thường</small>
+                    <small class="fw-bold text-muted text-uppercase">Ghế thường</small>
                 </div>
                 <div class="d-flex align-items-center gap-2">
                     <div class="seat-item seat-vip" style="width: 25px; height: 25px; cursor: default;"></div>
-                    <small class="fw-bold text-muted">Ghế VIP (Hàng E)</small>
+                    <small class="fw-bold text-muted text-uppercase">Ghế VIP</small>
                 </div>
             </div>
         </div>

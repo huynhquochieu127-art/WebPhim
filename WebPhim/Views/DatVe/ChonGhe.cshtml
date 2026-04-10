@@ -16,31 +16,40 @@
             <div class="seat-container mb-5">
                 @if (Model.Phong?.Ghes != null && Model.Phong.Ghes.Any())
                 {
+                    // Sắp xếp các hàng theo đúng thứ tự A-E
                     var rows = Model.Phong.Ghes
                     .GroupBy(g => g.SoGhe.Substring(0, 1))
                     .OrderBy(group => group.Key);
 
-                    foreach (var row in rows)
+                    @foreach (var row in rows)
                     {
                         <div class="seat-row mb-3">
                             <div class="row-label">@row.Key</div>
 
                             @foreach (var ghe in row.OrderBy(g => g.SoGhe.Length).ThenBy(g => g.SoGhe))
                             {
-                                @* LOGIC TÍNH GIÁ DỰA TRÊN GIÁ SUẤT CHIẾU ADMIN NHẬP *@
-                                var giaGoc = Model.GiaVe; // Giá ông nhập từ trang tạo suất chiếu
+                                var giaGoc = Model.GiaVe;
                                 var price = giaGoc;
                                 var seatClass = "";
 
-                                if (row.Key == "A")
+                                // LOGIC PHÂN LOẠI GIÁ VÀ CLASS THEO HÀNG
+                                if (row.Key == "D" || row.Key == "E" || ghe.LoaiGhe == "VIP")
                                 {
-                                    seatClass = "seat-cheap";
-                                    price = giaGoc - 10000; // Hàng A giảm 10k
-                                }
-                                else if (ghe.LoaiGhe == "VIP" || row.Key == "D" || row.Key == "E")
-                                {
+                                    // HÀNG ĐẸP (VIP): Tăng 20k
                                     seatClass = "seat-vip";
-                                    price = giaGoc + 20000; // Hàng VIP tăng 20k
+                                    price = giaGoc + 20000;
+                                }
+                                else if (row.Key == "A")
+                                {
+                                    // TIẾT KIỆM: Giảm 10k
+                                    seatClass = "seat-cheap";
+                                    price = giaGoc - 10000;
+                                }
+                                else
+                                {
+                                    // TIÊU CHUẨN (Hàng B, C): Giữ nguyên giá gốc
+                                    seatClass = ""; // Không thêm class đặc biệt, sẽ hiện màu trắng tiêu chuẩn
+                                    price = giaGoc;
                                 }
 
                                 <div class="seat-item @seatClass"
@@ -58,16 +67,28 @@
                 }
             </div>
 
-            @* Chú thích màu sắc *@
+            @* Chú thích màu sắc - Đã fix giống Admin *@
             <div class="d-flex justify-content-center gap-4 mt-5 border-top pt-4">
-                <div class="seat-legend-item"><div class="seat-item seat-cheap"></div> <span>Tiết kiệm (-10k)</span></div>
-                <div class="seat-legend-item"><div class="seat-item"></div> <span>Tiêu chuẩn</span></div>
-                <div class="seat-legend-item"><div class="seat-item seat-vip"></div> <span>Hàng đẹp (+20k)</span></div>
-                <div class="seat-legend-item"><div class="seat-item selected"></div> <span>Đang chọn</span></div>
+                <div class="seat-legend-item d-flex align-items-center gap-2">
+                    <div class="seat-item seat-cheap" style="cursor: default;"></div>
+                    <span class="small fw-bold text-muted text-uppercase">Tiết kiệm </span>
+                </div>
+                <div class="seat-legend-item d-flex align-items-center gap-2">
+                    <div class="seat-item" style="cursor: default;"></div>
+                    <span class="small fw-bold text-muted text-uppercase">Tiêu chuẩn</span>
+                </div>
+                <div class="seat-legend-item d-flex align-items-center gap-2">
+                    <div class="seat-item seat-vip" style="cursor: default;"></div>
+                    <span class="small fw-bold text-muted text-uppercase">Hàng đẹp </span>
+                </div>
+                <div class="seat-legend-item d-flex align-items-center gap-2">
+                    <div class="seat-item selected" style="cursor: default;"></div>
+                    <span class="small fw-bold text-muted text-uppercase">Đang chọn</span>
+                </div>
             </div>
         </div>
 
-        @* Cột phải: Thông tin vé *@
+        @* Cột phải: Thông tin vé (Giữ nguyên logic của Hiếu vì đã ổn) *@
         <div class="col-lg-4">
             <div class="card border-0 shadow-lg p-4 rounded-4 bg-white sticky-top" style="top: 20px;">
                 <h4 class="fw-bold mb-4 text-primary border-bottom pb-2">VÉ CỦA BẠN</h4>
@@ -120,6 +141,7 @@
             let totalPrice = 0;
 
             $('.seat-item').click(function () {
+                // Chặn click nếu ghế đã được đặt (occupied)
                 if ($(this).hasClass('occupied')) return;
 
                 const seatId = $(this).data('id');
@@ -136,9 +158,11 @@
                     totalPrice += seatPrice;
                 }
 
+                // Cập nhật giao diện
                 $('#display-seats').text(selectedSeats.length > 0 ? selectedSeats.map(s => s.name).join(', ') : 'Chưa chọn');
                 $('#total-price').text(totalPrice.toLocaleString('vi-VN') + 'đ');
 
+                // Lưu ID vào input hidden để submit form
                 $('#selected-seats-input').val(selectedSeats.map(s => s.id).join(','));
                 $('#btn-confirm').prop('disabled', selectedSeats.length === 0);
             });

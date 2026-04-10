@@ -24,8 +24,9 @@ namespace WebPhim.Areas.Admin.Controllers
             var gheCuaPhong = await _context.Ghes
                 .Include(g => g.Phong)
                 .Where(g => g.PhongId == phongId)
-                // Sắp xếp theo độ dài trước, sau đó mới đến tên ghế để A1 < A10
-                .OrderBy(g => g.SoGhe.Length)
+                // Sắp xếp theo Tên hàng (A->E) trước, sau đó mới đến số ghế
+                .OrderBy(g => g.SoGhe.Substring(0, 1))
+                .ThenBy(g => g.SoGhe.Length)
                 .ThenBy(g => g.SoGhe)
                 .ToListAsync();
 
@@ -36,11 +37,11 @@ namespace WebPhim.Areas.Admin.Controllers
             return View(gheCuaPhong);
         }
 
-        // 2. HÀM CỰC HAY: Tự động tạo 50 ghế cho phòng
+        // 2. HÀM TỰ ĐỘNG TẠO GHẾ: Fix hàng D và E là VIP
         [HttpPost]
         public async Task<IActionResult> AutoGenerateSeats(int phongId)
         {
-            // Kiểm tra xem phòng này đã có ghế chưa để tránh tạo trùng
+            // Kiểm tra xem phòng này đã có ghế chưa
             if (_context.Ghes.Any(g => g.PhongId == phongId))
             {
                 return RedirectToAction(nameof(Index), new { phongId = phongId });
@@ -53,8 +54,9 @@ namespace WebPhim.Areas.Admin.Controllers
                 {
                     var ghe = new Ghe
                     {
-                        SoGhe = hàng[i] + j, // Kết quả: A1, A2... E10
-                        LoaiGhe = (hàng[i] == "E") ? "VIP" : "Thường", // Hàng E cho làm VIP luôn
+                        SoGhe = hàng[i] + j,
+                        // FIX TẠI ĐÂY: Nếu hàng là D hoặc E thì set là VIP, còn lại là Thường
+                        LoaiGhe = (hàng[i] == "D" || hàng[i] == "E") ? "VIP" : "Thường",
                         PhongId = phongId
                     };
                     _context.Ghes.Add(ghe);

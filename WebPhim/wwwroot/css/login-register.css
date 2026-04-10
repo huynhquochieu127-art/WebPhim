@@ -1,97 +1,105 @@
 ﻿/* ============================================================
-   DESIGN LOGIN-REGISTER - PHIÊN BẢN CINEMAVP LUXURY (OPTIMIZED)
+    CINEMAVP LUXURY - KHÔI PHỤC HIỆU ỨNG FLOATING LABEL
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
-body {
-    background-color: #f4f7f6;
-    font-family: 'Inter', sans-serif;
-    margin: 0;
+/* --- 1. NAVBAR - ĐỒNG BỘ STYLE FORM --- */
+ul.navbar-nav li.nav-item a.btn-login-nav {
+    color: #1a1a1a !important;
+    text-decoration: none !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    padding: 8px 16px !important;
+    display: inline-flex !important;
+    align-items: center;
+    background: transparent !important;
 }
 
-/* --- 1. CONTAINER BỌC NGOÀI --- */
+ul.navbar-nav li.nav-item a.btn-register-nav {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    padding: 10px 24px !important;
+    border-radius: 50px !important;
+    display: inline-flex !important;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2) !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Hover Effects Navbar */
+a.btn-login-nav:hover {
+    color: #dc3545 !important;
+}
+
+a.btn-register-nav:hover {
+    background-color: #c82333 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(220, 53, 69, 0.3) !important;
+}
+
+/* --- 2. CẤU TRÚC CARD --- */
 .auth-container {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 40px 20px;
     background: radial-gradient(circle at top right, #ffffff, #e9ecef);
 }
 
-/* --- 2. AUTH CARD --- */
 .auth-card {
     width: 100%;
-    max-width: 420px;
+    max-width: 450px;
     border-radius: 24px !important;
-    overflow: hidden;
-    border: none !important;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+    overflow: hidden;
     background: #ffffff;
-    animation: fadeInAuth 0.5s ease-out;
-}
-
-@keyframes fadeInAuth {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    border: none !important;
 }
 
 .auth-header-dark {
     background: linear-gradient(135deg, #1a1a1a 0%, #343a40 100%) !important;
     color: white !important;
-    padding: 40px 20px !important;
+    padding: 35px 20px !important;
     text-align: center;
 }
 
-/* --- 3. INPUT & FLOATING LABELS (FIX LỖI ĐÈ CHỮ) --- */
 .auth-body {
-    padding: 30px 40px 45px 40px !important;
+    padding: 30px 40px !important;
 }
 
+/* --- 3. INPUTS & FLOATING LABEL (FIX LỖI MẤT HIỆU ỨNG) --- */
 .form-floating {
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
 }
 
-    /* Fix khoảng cách nội dung bên trong input */
+    /* Ép kiểu chữ và bo góc Luxury, nhưng GIỮ NGUYÊN PADDING MẶC ĐỊNH */
     .form-floating > .form-control {
         border-radius: 12px !important;
-        padding: 1.625rem 0.75rem 0.625rem 0.75rem !important;
         border: 1.5px solid #e9ecef !important;
         background-color: #f8f9fa !important;
-        line-height: 1.5 !important; /* Tăng để chữ không sát nhau */
-        height: calc(3.5rem + 2px) !important;
-        transition: all 0.25s ease-in-out;
+        /* QUAN TRỌNG: Chỉ set những thứ không phá hiệu ứng bay */
+        height: 60px !important;
     }
 
-    /* Fix vị trí label khi bay lên */
+    /* Chỉ sửa style chữ cho sang, KHÔNG SỬA PADDING */
     .form-floating > label {
-        padding: 1rem 0.75rem !important;
-        color: #adb5bd !important;
-        font-size: 0.9rem;
+        font-family: 'Inter', sans-serif !important;
+        color: #999 !important;
     }
 
+/* Hiệu ứng khi focus: Đổi nền trắng và viền đỏ cho Luxury */
 .form-control:focus {
     background-color: #fff !important;
     border-color: #dc3545 !important;
     box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1) !important;
-    outline: none;
 }
 
-/* Fix Autofill cho trình duyệt */
-.form-control:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0px 1000px #f8f9fa inset !important;
-    -webkit-text-fill-color: #212529 !important;
-}
-
-/* --- 4. NÚT XÁC NHẬN TRONG TRANG --- */
+/* Nút xác nhận cuối form (Đăng nhập / Đăng ký) */
 .btn-auth {
     background: #dc3545 !important;
     color: white !important;
@@ -99,80 +107,34 @@ body {
     border-radius: 12px !important;
     padding: 14px !important;
     text-transform: uppercase;
-    letter-spacing: 1.2px;
-    border: none !important;
+    letter-spacing: 1px;
     width: 100%;
-    margin-top: 10px;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none !important;
+    margin-top: 15px;
+    transition: all 0.3s ease;
 }
 
     .btn-auth:hover {
         background: #c82333 !important;
-        transform: scale(1.02);
+        transform: scale(1.01);
         box-shadow: 0 10px 20px rgba(220, 53, 69, 0.2) !important;
     }
 
-/* --- 5. NAVBAR AUTH (FIX LỖI DÍNH ICON & GẠCH CHÂN) --- */
-.btn-login-nav {
-    color: #333 !important;
-    font-weight: 600;
-    padding: 8px 16px !important;
-    display: inline-flex;
-    align-items: center;
-    text-decoration: none !important; /* Bỏ gạch chân */
-    border-radius: 50px;
-    transition: all 0.2s;
-}
-
-    .btn-login-nav:hover {
-        color: #dc3545 !important;
-        background-color: rgba(0,0,0,0.03);
-    }
-
-.btn-register-nav {
-    background-color: #dc3545 !important;
-    color: white !important;
-    font-weight: 600;
-    padding: 8px 22px !important;
-    border-radius: 50px !important;
-    display: inline-flex;
-    align-items: center;
-    text-decoration: none !important; /* Bỏ gạch chân */
-    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15) !important;
-    transition: all 0.3s ease;
-}
-
-    .btn-register-nav:hover {
-        background-color: #b02a37 !important;
-        color: white !important;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(220, 53, 69, 0.25) !important;
-    }
-
-/* Căn chỉnh Icon cho Navbar */
-.nav-auth-icon {
-    font-size: 1.1rem;
-    margin-right: 8px !important; /* Ép khoảng cách icon và chữ */
-}
-
-/* --- 6. VALIDATION & RESPONSIVE --- */
+/* Validation Errors (Cho trang Register) */
 .field-validation-error {
     color: #dc3545;
     font-size: 0.8rem;
-    margin-top: 6px;
-    display: block;
     font-weight: 500;
+    margin-top: 5px;
+    display: block;
 }
 
+/* --- 4. RESPONSIVE --- */
 @media (max-width: 480px) {
-    .auth-body {
-        padding: 25px 20px !important;
-    }
-
     .auth-card {
         border-radius: 0 !important;
-        min-height: 100vh;
         max-width: 100%;
+        min-height: 100vh;
     }
 
     .auth-container {
