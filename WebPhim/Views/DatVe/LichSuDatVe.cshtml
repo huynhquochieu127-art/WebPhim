@@ -1,0 +1,63 @@
+﻿@model IEnumerable<WebPhim.Models.Ve>
+
+<div class="container py-5">
+    <h2 class="fw-bold text-danger mb-4">LỊCH SỬ ĐẶT VÉ</h2>
+
+    <div class="table-responsive shadow-sm rounded-3">
+        <table class="table table-hover align-middle bg-white">
+            <thead class="table-danger">
+                <tr>
+                    <th>Phim</th>
+                    <th>Rạp / Phòng</th>
+                    <th>Suất chiếu</th>
+                    <th>Ghế</th>
+                    <th>Tổng tiền</th>
+                    <th>Ngày đặt</th> @* Đã thêm tiêu đề cột mới *@
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong class="text-dark">@item.LichChieu?.Phim?.TenPhim</strong>
+                        </td>
+
+                        <td>
+                            <div class="fw-bold text-primary">@item.LichChieu?.Phong?.Rap?.TenRap</div>
+                            <small class="text-muted">@item.LichChieu?.Phong?.TenPhong</small>
+                        </td>
+
+                        <td>
+                            <div class="fw-bold text-dark">
+                                <i class="bi bi-clock"></i> @item.LichChieu?.ThoiGianChieu.ToString("HH:mm")
+                            </div>
+                            <small class="text-muted">@item.LichChieu?.ThoiGianChieu.ToString("dd/MM/yyyy")</small>
+                        </td>
+
+                        <td>
+                            <span class="badge bg-info text-dark">@item.Ghe?.SoGhe</span>
+                        </td>
+
+                        <td class="fw-bold text-danger">
+                            @item.TongTien.ToString("N0")đ
+                        </td>
+
+                        @* FIX: Hiển thị giờ và ngày đặt vé cụ thể *@
+                        <td>
+                            <div class="fw-bold text-dark">
+                                <i class="bi bi-calendar-check"></i> @item.NgayDat.ToString("HH:mm") @* Hiện giờ đặt ví dụ 14:52 *@
+                            </div>
+                            <small class="text-muted">@item.NgayDat.ToString("dd/MM/yyyy")</small>
+                        </td>
+
+                        <td>
+                            <span class="badge bg-success">Đã đặt</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

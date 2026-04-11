@@ -11,87 +11,90 @@
     <div class="row g-5">
         @* Cột trái: Sơ đồ ghế *@
         <div class="col-lg-8">
-            <div class="cinema-screen shadow-sm mb-5">MÀN HÌNH</div>
+            <div class="cinema-screen shadow-sm mb-5 text-center py-2 bg-dark text-white rounded-pill opacity-75">MÀN HÌNH</div>
 
             <div class="seat-container mb-5">
                 @if (Model.Phong?.Ghes != null && Model.Phong.Ghes.Any())
                 {
-                    // Sắp xếp các hàng theo đúng thứ tự A-E
+                    // Nhóm ghế theo hàng (A, B, C...)
                     var rows = Model.Phong.Ghes
-                    .GroupBy(g => g.SoGhe.Substring(0, 1))
-                    .OrderBy(group => group.Key);
+                        .GroupBy(g => g.SoGhe.Substring(0, 1))
+                        .OrderBy(group => group.Key);
 
                     @foreach (var row in rows)
                     {
-                        <div class="seat-row mb-3">
-                            <div class="row-label">@row.Key</div>
+                        <div class="seat-row mb-3 d-flex align-items-center justify-content-center">
+                            <div class="row-label me-3 fw-bold text-muted" style="width: 20px;">@row.Key</div>
 
-                            @foreach (var ghe in row.OrderBy(g => g.SoGhe.Length).ThenBy(g => g.SoGhe))
+                            @foreach (var ghe in row.OrderBy(g => int.Parse(g.SoGhe.Substring(1))))
                             {
                                 var giaGoc = Model.GiaVe;
                                 var price = giaGoc;
                                 var seatClass = "";
 
-                                // LOGIC PHÂN LOẠI GIÁ VÀ CLASS THEO HÀNG
+                                // Tính toán giá và loại ghế dựa trên hàng (Khớp với Controller)
                                 if (row.Key == "D" || row.Key == "E" || ghe.LoaiGhe == "VIP")
                                 {
-                                    // HÀNG ĐẸP (VIP): Tăng 20k
                                     seatClass = "seat-vip";
                                     price = giaGoc + 20000;
                                 }
                                 else if (row.Key == "A")
                                 {
-                                    // TIẾT KIỆM: Giảm 10k
                                     seatClass = "seat-cheap";
                                     price = giaGoc - 10000;
                                 }
-                                else
-                                {
-                                    // TIÊU CHUẨN (Hàng B, C): Giữ nguyên giá gốc
-                                    seatClass = ""; // Không thêm class đặc biệt, sẽ hiện màu trắng tiêu chuẩn
-                                    price = giaGoc;
-                                }
 
-                                <div class="seat-item @seatClass"
+                                // Kiểm tra ghế đã bán dựa trên quan hệ navigation Ves trong model LichChieu
+                                bool isBooked = Model.Ves?.Any(v => v.GheId == ghe.Id) ?? false;
+
+                                <div class="seat-item @seatClass @(isBooked ? "occupied" : "")"
                                      data-id="@ghe.Id"
                                      data-name="@ghe.SoGhe"
-                                     data-price="@price"
-                                     title="Ghế @ghe.SoGhe - @price.ToString("N0")đ">
+                                     data-price="@(isBooked ? 0 : price)"
+                                     title="@(isBooked ? "Ghế đã có người đặt" : $"Ghế {ghe.SoGhe} - {price.ToString("N0")}đ")">
                                     @ghe.SoGhe
                                 </div>
                             }
 
-                            <div class="row-label">@row.Key</div>
+                            <div class="row-label ms-3 fw-bold text-muted" style="width: 20px;">@row.Key</div>
                         </div>
                     }
                 }
+                else
+                {
+                    <p class="text-center text-muted italic">Chưa có dữ liệu ghế cho phòng này.</p>
+                }
             </div>
 
-            @* Chú thích màu sắc - Đã fix giống Admin *@
-            <div class="d-flex justify-content-center gap-4 mt-5 border-top pt-4">
+            @* Chú thích *@
+            <div class="d-flex justify-content-center flex-wrap gap-4 mt-5 border-top pt-4">
                 <div class="seat-legend-item d-flex align-items-center gap-2">
                     <div class="seat-item seat-cheap" style="cursor: default;"></div>
-                    <span class="small fw-bold text-muted text-uppercase">Tiết kiệm </span>
+                    <span class="small fw-bold text-muted">TIẾT KIỆM</span>
                 </div>
                 <div class="seat-legend-item d-flex align-items-center gap-2">
                     <div class="seat-item" style="cursor: default;"></div>
-                    <span class="small fw-bold text-muted text-uppercase">Tiêu chuẩn</span>
+                    <span class="small fw-bold text-muted">TIÊU CHUẨN</span>
                 </div>
                 <div class="seat-legend-item d-flex align-items-center gap-2">
                     <div class="seat-item seat-vip" style="cursor: default;"></div>
-                    <span class="small fw-bold text-muted text-uppercase">Hàng đẹp </span>
+                    <span class="small fw-bold text-muted">VIP</span>
                 </div>
                 <div class="seat-legend-item d-flex align-items-center gap-2">
                     <div class="seat-item selected" style="cursor: default;"></div>
-                    <span class="small fw-bold text-muted text-uppercase">Đang chọn</span>
+                    <span class="small fw-bold text-muted">ĐANG CHỌN</span>
+                </div>
+                <div class="seat-legend-item d-flex align-items-center gap-2">
+                    <div class="seat-item occupied" style="cursor: default;"></div>
+                    <span class="small fw-bold text-muted">ĐÃ BÁN</span>
                 </div>
             </div>
         </div>
 
-        @* Cột phải: Thông tin vé (Giữ nguyên logic của Hiếu vì đã ổn) *@
+        @* Cột phải: Thông tin đặt vé *@
         <div class="col-lg-4">
             <div class="card border-0 shadow-lg p-4 rounded-4 bg-white sticky-top" style="top: 20px;">
-                <h4 class="fw-bold mb-4 text-primary border-bottom pb-2">VÉ CỦA BẠN</h4>
+                <h4 class="fw-bold mb-4 text-danger border-bottom pb-2 text-uppercase">Hóa đơn của bạn</h4>
 
                 <div class="mb-3">
                     <label class="text-muted small text-uppercase fw-bold">Phim</label>
@@ -104,7 +107,7 @@
                         <div class="fw-bold text-dark">@Model.Phong?.TenPhong</div>
                     </div>
                     <div class="col-6">
-                        <label class="text-muted small text-uppercase fw-bold">Suất</label>
+                        <label class="text-muted small text-uppercase fw-bold">Giờ chiếu</label>
                         <div class="fw-bold text-dark">@Model.ThoiGianChieu.ToString("HH:mm")</div>
                     </div>
                 </div>
@@ -112,18 +115,21 @@
                 <hr class="border-secondary opacity-25">
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="text-muted">Ghế đã chọn:</span>
-                    <span id="display-seats" class="badge bg-primary fs-6 shadow-sm">Chưa chọn</span>
+                    <span class="text-muted">Ghế:</span>
+                    <span id="display-seats" class="badge bg-danger fs-6 shadow-sm">Chưa chọn</span>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <span class="text-muted">Tổng tiền:</span>
+                    <span class="text-muted">Tổng cộng:</span>
                     <h3 id="total-price" class="fw-bold text-danger mb-0">0đ</h3>
                 </div>
 
-                <form asp-action="XacNhanDatVe" method="post">
+                @* FIX QUAN TRỌNG: Thêm asp-controller="DatVe" để tránh lỗi 404 *@
+                <form asp-controller="DatVe" asp-action="XacNhanDatVe" method="post">
+                    @Html.AntiForgeryToken()
                     <input type="hidden" name="LichChieuId" value="@Model.Id" />
                     <input type="hidden" id="selected-seats-input" name="SelectedSeats" />
+                    
                     <button type="submit" id="btn-confirm" class="btn btn-danger w-100 btn-lg rounded-pill fw-bold py-3 shadow-sm" disabled>
                         XÁC NHẬN ĐẶT VÉ
                     </button>
@@ -141,7 +147,6 @@
             let totalPrice = 0;
 
             $('.seat-item').click(function () {
-                // Chặn click nếu ghế đã được đặt (occupied)
                 if ($(this).hasClass('occupied')) return;
 
                 const seatId = $(this).data('id');
@@ -158,12 +163,14 @@
                     totalPrice += seatPrice;
                 }
 
-                // Cập nhật giao diện
+                // Cập nhật UI
                 $('#display-seats').text(selectedSeats.length > 0 ? selectedSeats.map(s => s.name).join(', ') : 'Chưa chọn');
                 $('#total-price').text(totalPrice.toLocaleString('vi-VN') + 'đ');
 
-                // Lưu ID vào input hidden để submit form
+                // Đồng bộ với input hidden để submit form
                 $('#selected-seats-input').val(selectedSeats.map(s => s.id).join(','));
+                
+                // Toggle nút xác nhận
                 $('#btn-confirm').prop('disabled', selectedSeats.length === 0);
             });
         });

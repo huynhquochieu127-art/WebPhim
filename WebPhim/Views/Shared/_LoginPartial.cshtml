@@ -9,24 +9,39 @@
         var user = await UserManager.GetUserAsync(User);
         var displayAlias = user?.HoTen ?? UserManager.GetUserName(User);
 
-        <li class="nav-item">
-            <a class="nav-link user-profile-link px-3" asp-area="Identity" asp-page="/Account/Manage/Index">
+        <li class="nav-item dropdown">
+            @* Biến phần chào thành nút bấm để mở Menu Lịch sử *@
+            <a class="nav-link dropdown-toggle user-profile-link px-3 no-caret" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fas fa-user-circle me-2 text-danger"></i>
                 <span class="d-none d-sm-inline fw-600">Chào, @displayAlias!</span>
             </a>
-        </li>
-        <li class="nav-item">
-            <form class="d-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
-                <button type="submit" class="btn-logout-nav ms-2">
-                    <i class="fas fa-power-off me-1"></i>Thoát
-                </button>
-            </form>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="userDropdown">
+                <li>
+                    @* Lối tắt đi thẳng đến trang Lịch sử đặt vé *@
+                    <a class="dropdown-item py-2" asp-controller="DatVe" asp-action="LichSuDatVe">
+                        <i class="fas fa-history me-2 text-muted"></i>Lịch sử đặt vé
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item py-2" asp-area="Identity" asp-page="/Account/Manage/Index">
+                        <i class="fas fa-user-cog me-2 text-muted"></i>Quản lý tài khoản
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <form class="d-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                        <button type="submit" class="dropdown-item text-danger py-2">
+                            <i class="fas fa-power-off me-2"></i>Thoát
+                        </button>
+                    </form>
+                </li>
+            </ul>
         </li>
     }
     else
     {
         <li class="nav-item">
-            @* QUAN TRỌNG: Chỉ giữ lại đúng class btn-login-nav để CSS can thiệp *@
             <a class="btn-login-nav" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
         </li>
         <li class="nav-item ms-lg-2">

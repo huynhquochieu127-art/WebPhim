@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Thanh toán vé xem phim";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-lg rounded-4 p-4 text-center bg-white">
+                <h2 class="fw-bold text-danger mb-4">THANH TOÁN QR</h2>
+                <p class="text-muted mb-4">Quét mã QR bằng ứng dụng Ngân hàng hoặc Ví điện tử để hoàn tất.</p>
+
+                <div class="qr-box mb-4 p-3 border rounded-3 d-inline-block bg-light">
+                    <img src="@ViewBag.QrUrl" class="img-fluid" style="max-width: 300px;" alt="Mã QR VietQR" />
+                </div>
+
+                <div class="payment-info text-start mb-4 bg-light p-3 rounded-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Số lượng vé:</span>
+                        <span class="fw-bold">@ViewBag.GheCount ghế</span>
+                    </div>
+                    <div class="d-flex justify-content-between border-top pt-2">
+                        <span class="text-muted">Tổng cộng:</span>
+                        <span class="fw-bold text-danger fs-4">@ViewBag.TongTien.ToString("N0")đ</span>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <form asp-action="XacNhanThanhToanXong" asp-controller="DatVe" method="post">
+                        <button type="submit" class="btn btn-danger btn-lg rounded-pill fw-bold w-100">
+                            TÔI ĐÃ THANH TOÁN XONG
+                        </button>
+                    </form>
+
+                    <p class="small text-muted mt-2 italic">
+                        * Sau khi thanh toán, hệ thống sẽ xác nhận và gửi thông báo cho bạn.
+                    </p>
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>
